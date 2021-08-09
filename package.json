@@ -1,0 +1,19 @@
+{
+  "name": "preguntas-app-backend",
+  "version": "1.0.0",
+  "description": "Este es mi backend con express y mongodb para mi app de preguntas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Javier Martinez",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.10.0",
+    "mongoose": "^5.12.3"
+  }
+}
