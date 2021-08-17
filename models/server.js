@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 const { dbConnection } = require('../database/config');
+const { request } = require('express');
 
 class Server {
   constructor() {
@@ -10,7 +11,8 @@ class Server {
     this.port = process.env.PORT;
 
     this.paths = {
-      quiz: "/quiz",
+      quiz:   "/quiz",
+      user:   "/users"
     };
 
     this.connectDB();
@@ -33,7 +35,8 @@ class Server {
   }
 
   routes(){
-      this.app.use( this.paths.quiz, require('../routes/quiz'));
+      this.app.use( this.paths.quiz,  require('../routes/quiz'));
+      this.app.use( this.paths.user,  require('../routes/user'));
   }
 
   listen(){
