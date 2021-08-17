@@ -2,8 +2,7 @@ require('colors');
 const express = require("express");
 const cors = require("cors");
 
-const { dbConnection } = require('../database/config');
-const { request } = require('express');
+const { dbConnection } = require('../db/config');
 
 class Server {
   constructor() {
