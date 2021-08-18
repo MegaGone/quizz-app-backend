@@ -42,7 +42,20 @@ const getUser = async (req = request, res = response) => {
 };
 
 const updateUser = async (req = request, res = response) => {
-  res.send("UPDATE USER BY ID");
+  const { id } = req.params;
+  const { _id, password, google, email, ...data } = req.body;
+
+  if(password){
+    const salt = bcrypt.genSaltSync();
+    data.password = bcrypt.hashSync(password, salt);
+  }
+
+  const userDB = await User.findByIdAndUpdate(id, data);
+
+  res.json({
+    userDB
+  });
+
 };
 
 const deleteUser = async (req = request, res = response) => {

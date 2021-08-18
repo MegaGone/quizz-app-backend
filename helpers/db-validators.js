@@ -8,6 +8,16 @@ const validateEmail = async (email = "") => {
   }
 };
 
+const verifyUserById = async id => {
+
+  const userVerified = await User.findById(id);
+
+  if( !userVerified ){
+    throw new Error(`ERROR: ID ${id} dont exist`)
+  }
+};
+
 module.exports = {
   validateEmail,
+  verifyUserById
 };

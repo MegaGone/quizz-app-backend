@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const Controller = require('../controllers/user');
 
 // Helpers
-const { validateEmail } = require('../helpers/db-validators');
+const { validateEmail, verifyUserById } = require('../helpers/db-validators');
 
 // Middlwares
 const { validateFields } = require('../middlewares/validate-fields');
@@ -24,9 +24,21 @@ router.post('/',
 ]
 ,Controller.createUser)
 
-router.get('/:id', Controller.getUser)
+router.get('/:id', 
+[
+    check('id', 'Invalid ID').isMongoId(),
+    check('id').custom( verifyUserById ),
+    validateFields
+]
+,Controller.getUser)
 
-router.put('/:id', Controller.updateUser)
+router.put('/:id', 
+[
+    check('id', 'Invalid ID').isMongoId(),
+    check('id').custom(verifyUserById),
+    validateFields
+]
+,Controller.updateUser)
 
 router.delete('/:id', Controller.deleteUser)
 
