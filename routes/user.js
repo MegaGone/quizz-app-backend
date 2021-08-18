@@ -40,6 +40,14 @@ router.put('/:id',
 ]
 ,Controller.updateUser)
 
-router.delete('/:id', Controller.deleteUser)
+router.delete('/:id', 
+[
+    check('id', 'Invalid ID').isMongoId(),
+    check('id').custom(verifyUserById),
+    validateFields
+]
+,Controller.deleteUser)
+
+router.delete('/', Controller.purgeDeleteUsers)
 
 module.exports = router;
