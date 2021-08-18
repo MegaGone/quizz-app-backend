@@ -4,10 +4,10 @@ const { check } = require('express-validator');
 const Controller = require('../controllers/user');
 
 // Helpers
-const { validateEmail, verifyUserById } = require('../helpers/db-validators');
+const { validateEmail, verifyUserById, validateRole } = require('../helpers/db-validators');
 
 // Middlwares
-const { validateFields } = require('../middlewares/validate-fields');
+const { validateFields, haveRoles } = require('../middlewares');
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router.post('/',
     check('email', 'Invalid email').isEmail(),
     check('email').custom( validateEmail ),
     check('password', 'Password must at least 6 characters').isLength({min: 6}),
-    check('role', 'Invalid role').not().isEmpty(),
+    check('role').custom( validateRole ),
     validateFields
 ]
 ,Controller.createUser)
@@ -36,12 +36,14 @@ router.put('/:id',
 [
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(verifyUserById),
+    check('id').custom( validateRole ),
     validateFields
 ]
 ,Controller.updateUser)
 
 router.delete('/:id', 
 [
+    // haveRoles('ADMIN_ROLE', 'USER_ROLE'),
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(verifyUserById),
     validateFields
