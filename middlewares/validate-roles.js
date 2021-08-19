@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 
-const haveRoles = async (...roles) => {
+const haveRoles = (...roles) => {
 
     return ( req = request, res = response, next ) => {
 
