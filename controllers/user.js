@@ -38,7 +38,17 @@ const createUser = async (req = request, res = response) => {
 };
 
 const getUser = async (req = request, res = response) => {
-  res.send("GET USER BY ID");
+  
+  const { id } = req.params;
+
+  const userDB = await User.findById(id);
+
+  if (!userDB) {
+    return res.status(500).send('ERROR: We have a issue to find a user')
+  }
+
+  return res.status(200).json(userDB)
+
 };
 
 const updateUser = async (req = request, res = response) => {
