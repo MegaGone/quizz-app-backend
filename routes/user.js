@@ -36,7 +36,6 @@ router.put('/:id',
 [
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(verifyUserById),
-    check('id').custom( validateRole ),
     validateFields
 ]
 ,Controller.updateUser)
