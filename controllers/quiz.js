@@ -7,7 +7,9 @@ const getQuizs = (req = request, res = response) => {
   });
 };
 
-const createQuiz = (req = request, res = response) => {
+const createQuiz = async (req = request, res = response) => {
+
+  // TODO: Validar que el title sea mas de 6 caracteres y que sea unico por User
   res.json({
     msg: "CREATE",
     status: "200",

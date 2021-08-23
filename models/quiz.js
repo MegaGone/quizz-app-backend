@@ -1,5 +1,17 @@
 const { Schema, model } = require('mongoose');
 
+const QuestionSchema = Schema({
+    title: {
+        type: String,
+        required: [true, "Question title required"]
+    },
+    isCorrect: {
+        type: Boolean,
+        required: [true, "Its correct is required"],
+        default: false
+    }
+});
+
 const QuizSchema = Schema({
     title: {
         type: String,
@@ -8,7 +20,6 @@ const QuizSchema = Schema({
     enabled: {
         type: Boolean,
         default: true,
-        required: true
     },
     description: {
         type: String,
@@ -19,6 +30,10 @@ const QuizSchema = Schema({
         ref: "User",
         required: true
     },
+    questions: [{
+        type: QuestionSchema,
+        required: true
+    }]
     // TODO: Investigar ARRAY de un modelo de mongoose
 });
 
