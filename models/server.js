@@ -32,6 +32,8 @@ class Server {
 
     // PARSE DATA
     this.app.use(express.json());
+
+    this.app.use(express.static("public"));
   }
 
   routes(){
