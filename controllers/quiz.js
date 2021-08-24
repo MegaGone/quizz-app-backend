@@ -11,6 +11,7 @@ const getQuizs = (req = request, res = response) => {
 const createQuiz = async (req = request, res = response) => {
 
   // TODO: Validar que el title sea unico por User
+  // TODO: Investigar sobre validar propiedades dentro de un array en express
   const { _id: author } = req.user;
   const { questions, title, description } = req.body;
 
