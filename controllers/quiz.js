@@ -1,4 +1,5 @@
 const { request, response } = require("express");
+const { Quiz } = require('../models')
 
 const getQuizs = (req = request, res = response) => {
   res.json({
@@ -9,11 +10,23 @@ const getQuizs = (req = request, res = response) => {
 
 const createQuiz = async (req = request, res = response) => {
 
-  // TODO: Validar que el title sea mas de 6 caracteres y que sea unico por User
-  res.json({
-    msg: "CREATE",
-    status: "200",
-  });
+  // TODO: Validar que el title sea unico por User
+  const { _id: author } = req.user;
+  const { questions, title, description } = req.body;
+
+  try {
+    
+    const quiz = new Quiz({ title, description, questions, author })
+
+    await quiz.save();
+
+    return res.status(200).json(quiz)
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Error create the quiz")
+  }
+
 };
 
 const getQuiz = (req = request, res = response) => {
