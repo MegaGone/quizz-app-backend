@@ -39,7 +39,6 @@ const QuizSchema = Schema({
         required: true
     },
     questions: [QuestionSchema]
-    // TODO: Investigar ARRAY de un modelo de mongoose
 });
 
 QuizSchema.methods.toJSON = function () {
