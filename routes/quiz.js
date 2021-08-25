@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 // Helpers
-const { validateRole, verifyUserById, validateSpaces } = require('../helpers')
+const { validateRole, verifyUserById, validateSpaces, verifyQuizById } = require('../helpers')
 
 // Middlewares
 const { validateFields, validateJWT, haveRoles } = require('../middlewares')
@@ -12,7 +12,13 @@ const controller = require('../controllers/quiz');
 
 const router = Router();
 
-router.get('/', controller.getQuizs);
+router.get('/', 
+[
+  validateJWT,
+  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
+  validateFields,
+]
+,controller.getQuizs);
 
 router.post('/', 
 [
@@ -29,7 +35,24 @@ router.post('/',
 ]
 ,controller.createQuiz);
 
-router.get('/:id', controller.getQuiz);
+router.get('/:id', 
+[
+  validateJWT,
+  check('id', "Invalid ID").isMongoId(),
+  check('id').custom( verifyQuizById ),
+  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
+  validateFields
+]
+,controller.getQuiz);
+
+// Get Quiz by User
+router.post('/quizzes', 
+[
+  validateJWT,
+  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
+  validateFields
+]
+,controller.getQuizByUser)
 
 router.put('/:id', controller.updateQuiz);
 
