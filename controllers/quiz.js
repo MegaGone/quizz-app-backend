@@ -1,4 +1,6 @@
 const { request, response } = require("express");
+const { nanoid } = require('nanoid')
+
 const { Quiz } = require('../models')
 
 const getQuizs = async (req = request, res = response) => {
@@ -23,9 +25,12 @@ const createQuiz = async (req = request, res = response) => {
   const { _id: author } = req.user;
   const { questions, title, description } = req.body;
 
+  // GENERATE THE CODE TO THE QUIZ
+  const code = nanoid(7).toUpperCase();
+
   try {
     
-    const quiz = new Quiz({ title, description, questions, author })
+    const quiz = new Quiz({ title, description, questions, author, code })
 
     await quiz.save();
 

@@ -31,6 +31,7 @@ router.post('/',
   check('questions', "The quiz must be at least 5 questions").isArray({ min: 5}),
   check('questions.*.title', "Invalid title question").not().isEmpty(),
   check('questions.*.answers', 'The question must be at least 2 answers').isArray({ min:2 }),
+  check('participants', "We need a participants").isArray({ min: 0 }),
   validateFields  
 ]
 ,controller.createQuiz);

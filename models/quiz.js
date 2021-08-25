@@ -1,5 +1,20 @@
 const { Schema, model } = require('mongoose');
 
+const participantsSchema = Schema({
+    name: {
+        type: String,
+        required: [true, 'Name of participant required']
+    },
+    userId: {
+        type: String,
+        required: [true, 'Id required']
+    },
+    unitedIn: {
+        type: Date,
+        required: [true, 'Date of union required']
+    }
+})
+
 const answerSchema = Schema({
     title: {
         type: String,
@@ -38,7 +53,12 @@ const QuizSchema = Schema({
         ref: "User",
         required: true
     },
-    questions: [QuestionSchema]
+    code: {
+        type: String,
+        required: [true, "Code required"]
+    },
+    questions: [QuestionSchema],
+    participants: [participantsSchema]
 });
 
 QuizSchema.methods.toJSON = function () {
