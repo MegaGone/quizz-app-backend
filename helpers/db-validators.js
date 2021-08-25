@@ -32,9 +32,21 @@ const verifyQuizById = async id => {
   }
 };
 
+const verifyCodeToQuiz = async code => {
+
+  const query = { code: code };
+  const quizDB = await Quiz.find(query);
+
+  if(quizDB.length == 0){
+    throw new Error(`ERROR: Quiz with code ${code} not find`)
+  }
+
+};
+
 module.exports = {
   validateEmail,
   verifyUserById,
   validateRole,
-  verifyQuizById
+  verifyQuizById,
+  verifyCodeToQuiz
 };

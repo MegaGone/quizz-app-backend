@@ -1,5 +1,6 @@
 const { request, response } = require("express");
 const { nanoid } = require('nanoid')
+const moment = require('moment');
 
 const { Quiz } = require('../models')
 
@@ -42,6 +43,36 @@ const createQuiz = async (req = request, res = response) => {
   }
 
 };
+
+const joinToQuiz = async ( req = request, res = response ) => {
+  
+  // Get the code to join to the quiz
+  const { code } = req.body;
+
+  // Get the user data to the object Participant
+  const { _id: id, name } = req.user;
+  const date = moment().format("MMM Do YY")
+
+  const participant = {
+    name,
+    id,
+    date
+  }
+
+  try {
+    // Tengo la encuesta
+    const quizDB = await Quiz.find({code});
+
+    res.json(quizDB)
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('ERROR: We have a error to join the quiz')
+  }
+
+  
+
+}
 
 const getQuiz = async (req = request, res = response) => {
 
@@ -104,5 +135,6 @@ module.exports = {
   getQuiz,
   updateQuiz,
   deleteQuiz,
-  getQuizByUser
+  getQuizByUser,
+  joinToQuiz
 };

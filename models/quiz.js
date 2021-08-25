@@ -9,8 +9,8 @@ const participantsSchema = Schema({
         type: String,
         required: [true, 'Id required']
     },
-    unitedIn: {
-        type: Date,
+    joinIn: {
+        type: String,
         required: [true, 'Date of union required']
     }
 })

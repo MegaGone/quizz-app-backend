@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 // Helpers
-const { validateRole, verifyUserById, validateSpaces, verifyQuizById } = require('../helpers')
+const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
 const { validateFields, validateJWT, haveRoles } = require('../middlewares')
@@ -12,14 +12,16 @@ const controller = require('../controllers/quiz');
 
 const router = Router();
 
+// GET ALL QUIZ - ADMIN_ROLE
 router.get('/', 
 [
   validateJWT,
-  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
+  haveRoles('ADMIN_ROLE'),
   validateFields,
 ]
 ,controller.getQuizs);
 
+// CREATE QUIZ
 router.post('/', 
 [
   validateJWT,
@@ -36,6 +38,18 @@ router.post('/',
 ]
 ,controller.createQuiz);
 
+// JOIN TO THE QUIZ 
+router.post('/join', 
+[
+  validateJWT,
+  check('code', 'Code required').not().isEmpty(),
+  check('code', 'The code must be at least 7 chars').isLength({ min: 7 }),
+  check('code').custom( verifyCodeToQuiz ),
+  validateFields
+]
+,controller.joinToQuiz)
+
+// GET QUIZ BY ID
 router.get('/:id', 
 [
   validateJWT,
@@ -46,7 +60,7 @@ router.get('/:id',
 ]
 ,controller.getQuiz);
 
-// Get Quiz by User
+// GET QUIZ BY USER
 router.post('/quizzes', 
 [
   validateJWT,
@@ -55,8 +69,10 @@ router.post('/quizzes',
 ]
 ,controller.getQuizByUser)
 
+// UPDATE QUIZ
 router.put('/:id', controller.updateQuiz);
 
+// DELETE QUIZ
 router.delete('/:id', controller.deleteQuiz);
 
 module.exports = router;
