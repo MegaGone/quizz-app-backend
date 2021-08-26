@@ -50,27 +50,29 @@ const joinToQuiz = async ( req = request, res = response ) => {
   const { code } = req.body;
 
   // Get the user data to the object Participant
-  const { _id: id, name } = req.user;
-  const date = moment().format("MMM Do YY")
+  const { _id: userId, name } = req.user;
+  const joinIn = moment().format("MMM Do YY")
 
   const participant = {
     name,
-    id,
-    date
+    userId,
+    joinIn
   }
 
   try {
-    // Tengo la encuesta
-    const quizDB = await Quiz.find({code});
 
-    res.json(quizDB)
+    const quizDB = await Quiz.updateOne(
+      { code, 'participants.userId': { $nin: [participant.id] } },
+      { $push: { participants: participant } },
+      { upsert: false}
+    );
+
+    return res.status(200).send('Joined to the quiz')
 
   } catch (error) {
     console.log(error);
     return res.status(500).send('ERROR: We have a error to join the quiz')
   }
-
-  
 
 }
 
