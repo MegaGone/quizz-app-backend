@@ -59,6 +59,8 @@ const joinToQuiz = async ( req = request, res = response ) => {
     joinIn
   }
 
+  // TODO: Filter, If the userId Already exist, dont save, else, OK
+
   try {
 
     const quizDB = await Quiz.updateOne(
@@ -67,7 +69,9 @@ const joinToQuiz = async ( req = request, res = response ) => {
       { upsert: false}
     );
 
-    return res.status(200).send('Joined to the quiz')
+    // console.log(quizDB);
+    return res.send('OK')
+    // return res.status(200).send('Joined to the quiz')
 
   } catch (error) {
     console.log(error);

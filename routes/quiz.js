@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
-const { validateFields, validateJWT, haveRoles } = require('../middlewares')
+const { validateFields, validateJWT, haveRoles, validatePartipant } = require('../middlewares')
 
 // Controller
 const controller = require('../controllers/quiz');
@@ -45,6 +45,8 @@ router.post('/join',
   check('code', 'Code required').not().isEmpty(),
   check('code', 'The code must be at least 7 chars').isLength({ min: 7 }),
   check('code').custom( verifyCodeToQuiz ),
+  validateFields,
+  validatePartipant,
   validateFields
 ]
 ,controller.joinToQuiz)
