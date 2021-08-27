@@ -59,8 +59,6 @@ const joinToQuiz = async ( req = request, res = response ) => {
     joinIn
   }
 
-  // TODO: Filter, If the userId Already exist, dont save, else, OK
-
   try {
 
     const quizDB = await Quiz.updateOne(
@@ -69,9 +67,7 @@ const joinToQuiz = async ( req = request, res = response ) => {
       { upsert: false}
     );
 
-    // console.log(quizDB);
     return res.send('OK')
-    // return res.status(200).send('Joined to the quiz')
 
   } catch (error) {
     console.log(error);
@@ -121,18 +117,33 @@ const getQuizByUser = async ( req = request, res = response ) => {
 
 }
 
-const updateQuiz = (req = request, res = response) => {
-  res.json({
-    msg: "UPDATE",
-    status: "200",
-  });
+const updateQuiz = async (req = request, res = response) => {
+
+  const { id } = req.params;
+
+  const { author, code, ...data } = req.body;
+
+  const quizDB = await Quiz.findByIdAndUpdate(id, data);
+
+  if( !quizDB ) {
+    return res.status(400).send('ERROR: Error to update a quiz')
+  }
+
+  return res.status(200).send('UPDATE')
+
 };
 
-const deleteQuiz = (req = request, res = response) => {
-  res.json({
-    msg: "DELETE",
-    status: "200",
-  });
+const deleteQuiz = async (req = request, res = response) => {
+
+  const { id } = req.params;
+
+  const quizDB = await Quiz.findByIdAndDelete({_id: id})
+  
+  if(!quizDB){
+    return res.status(400).send('ERROR: We have a issue to delete the quiz')
+  }
+
+  return res.status(200).send('DELETED')
 };
 
 module.exports = {

@@ -72,9 +72,34 @@ router.post('/quizzes',
 ,controller.getQuizByUser)
 
 // UPDATE QUIZ
-router.put('/:id', controller.updateQuiz);
+router.put('/:id', 
+[
+  check('id', 'Invalid ID').not().isEmpty(),
+  check('id').custom( verifyQuizById ),
+  check('title', "Title required").not().isEmpty(),
+  check('title', "Title must be at least 5 chars").isLength({ min: 5}),
+  check('title').custom( validateSpaces ),
+  check('description', "Description required").not().isEmpty(),
+  check('description', "Description must be at least 10 chars").isLength({ min: 10 }),
+  check('questions', "The quiz must be at least 5 questions").isArray({ min: 5}),
+  check('questions.*.title', "Invalid title question").not().isEmpty(),
+  check('questions.*.answers', 'The question must be at least 2 answers').isArray({ min:2 }),
+  check('participants', "Participants must be at least 1 participants").isArray({ min: 1 }),
+  check('participants.*.name', "Name of participant required").not().isEmpty(),
+  check('participants.*.name').custom( validateSpaces ),
+  check('participants.*.userId', 'User ID required').not().isEmpty(),
+  check('participants.*.joinIn', 'Date of join required').not().isEmpty(),
+  validateFields
+]
+,controller.updateQuiz);
 
 // DELETE QUIZ
-router.delete('/:id', controller.deleteQuiz);
+router.delete('/:id', 
+[
+  check('id', 'Invalid ID').isMongoId(),
+  check('id').custom( verifyQuizById ),
+  validateFields
+]
+,controller.deleteQuiz);
 
 module.exports = router;

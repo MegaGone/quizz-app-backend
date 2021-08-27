@@ -12,6 +12,10 @@ const participantsSchema = Schema({
     joinIn: {
         type: String,
         required: [true, 'Date of union required']
+    },
+    correctAnswers: {
+        type: Number,
+        default: 0
     }
 })
 
@@ -39,10 +43,6 @@ const QuizSchema = Schema({
     title: {
         type: String,
         required: [true, "Title is required"]
-    },
-    enabled: {
-        type: Boolean,
-        default: true,
     },
     description: {
         type: String,
