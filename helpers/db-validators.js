@@ -1,11 +1,15 @@
 const { User, Role, Quiz } = require("../models");
 
 const validateRole = async (role = "") => {
-  const existRole = await Role.findOne({ role });
 
-  if (!existRole) {
-    throw new Error(`${role} its an invalid role`);
+  if ( !role.length == 0 ) {
+    const existRole = await Role.findOne({ role });
+
+    if (!existRole) {
+      throw new Error(`${role} its an invalid role`);
+    }
   }
+
 };
 
 const validateEmail = async (email = "") => {
