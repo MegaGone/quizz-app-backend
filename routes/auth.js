@@ -22,4 +22,11 @@ router.post('/login',
 ]
 ,controller.login)
 
+router.post('/google', 
+[
+    check('token', 'Token is required').not().isEmpty(),
+    validateFields
+]
+,controller.googleSignIn)
+
 module.exports = router;
