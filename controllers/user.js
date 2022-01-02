@@ -108,10 +108,7 @@ const purgeDeleteUsers = async(req = request, res = response ) => {
         return res.status(500).send('ERROR: We cant deleted the users, please try later.')
       } else {
 
-        return res.status(200).json({
-          msg: "Purge Complete",
-          ids
-        })
+        return res.status(200).send('Purge completed');
       }
 
     })

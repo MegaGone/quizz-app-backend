@@ -4,7 +4,7 @@
   "description": "Este es mi backend con express y mongodb para mi app de preguntas",
   "main": "index.js",
   "scripts": {
-    "start": "node app"
+    "start": "nodemon app"
   },
   "author": "Javier Martinez",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^5.12.3",
-    "nanoid": "^3.1.25"
+    "nanoid": "^3.1.25",
+    "nodemon": "^2.0.15"
   }
 }

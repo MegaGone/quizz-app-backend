@@ -32,6 +32,27 @@ const validateJWT = async (req = request, res = response, next) => {
   }
 };
 
+const validateJwtToRenewToken = async (req = request, res = response, next) => {
+  // Get token from the header - x-token
+  const token = req.header('x-token');
+
+  if(!token) return res.status(401).send('Token unexpected');
+  
+  try {
+      
+    const { uid } = jwt.verify(token, process.env.SECRETKEY);
+  
+    req.uid = uid;
+  
+    next();
+  
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Invalid token')
+  }
+}
+
 module.exports = {
   validateJWT,
+  validateJwtToRenewToken
 };
