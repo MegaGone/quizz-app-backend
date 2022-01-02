@@ -81,9 +81,7 @@ const renewToken = async(req = request, res = response) => {
 
   const token = await generateJWT( uid );
 
-  res.json({
-    token
-  })
+  return res.send(token)
 
 }
 
