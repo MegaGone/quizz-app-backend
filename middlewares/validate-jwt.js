@@ -12,15 +12,27 @@ const validateJWT = async (req = request, res = response, next) => {
 
   try {
     
-    const { uid } = jwt.verify(token, process.env.SECRETKEY)
-    req.uid = uid;
+    const { uid } = jwt.verify(token, process.env.SECRETKEY);
+
+    const user = await User.findById(uid);
+
+    if(!user) {
+      return res.status(401).send('Invalid token - Dont exist in DB');
+    }
+
+    if(!user.enabled) {
+      return res.status(401).send('Invalid token - User not enabled');
+    }
+
+    req.user = user;
 
     next();
 
   } catch (error) {
-    console.log(error);
-    return res.status(500).send('Invalid token');
+    console.log(err);  
+    return res.status(401).send('Invalid token')
   }
+
 };
 
 const validateJwtToRenewToken = async (req = request, res = response, next) => {
