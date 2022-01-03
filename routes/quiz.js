@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
-const { validateFields, validateJWT, haveRoles, validatePartipant } = require('../middlewares')
+const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken } = require('../middlewares')
 
 // Controller
 const controller = require('../controllers/quiz');
@@ -51,6 +51,9 @@ router.post('/join',
 ]
 ,controller.joinToQuiz)
 
+// Get Quizzes By User
+router.get('/quizzes', validateJwtToRenewToken, controller.getQuizzesByUser)
+
 // GET QUIZ BY ID
 router.get('/:id', 
 [
@@ -61,15 +64,6 @@ router.get('/:id',
   validateFields
 ]
 ,controller.getQuiz);
-
-// GET QUIZ BY USER
-router.post('/quizzes', 
-[
-  validateJWT,
-  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
-  validateFields
-]
-,controller.getQuizByUser)
 
 // UPDATE QUIZ
 router.put('/:id', 

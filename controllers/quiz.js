@@ -92,9 +92,10 @@ const getQuiz = async (req = request, res = response) => {
   return res.status(200).json(quizDB)
 };
 
-const getQuizByUser = async ( req = request, res = response ) => {
-  const { _id: id } = req.user;
-  const query = { author: id };
+const getQuizzesByUser = async (req = request, res = response) => {
+
+  const uid = req.uid;
+  const query = { author: uid };
 
   // const quizzes = await Quiz.find({ author: id }).skip()
   const [ total, quizzes ] = await Promise.all([
@@ -152,6 +153,6 @@ module.exports = {
   getQuiz,
   updateQuiz,
   deleteQuiz,
-  getQuizByUser,
-  joinToQuiz
+  joinToQuiz,
+  getQuizzesByUser
 };
