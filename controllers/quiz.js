@@ -98,9 +98,12 @@ const getQuizzesByUser = async (req = request, res = response) => {
   const query = { author: uid };
 
   // const quizzes = await Quiz.find({ author: id }).skip()
+  // Quiz.find().skip(Number(from)).limit(Number(limit))  // Query Params
+  // Quiz.find(query).limit(5)
+
   const [ total, quizzes ] = await Promise.all([
     Quiz.countDocuments(query),
-    Quiz.find(query).limit(5)
+    Quiz.find(query)
   ]);
 
   if (!quizzes) {
