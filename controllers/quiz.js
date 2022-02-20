@@ -150,6 +150,29 @@ const deleteQuiz = async (req = request, res = response) => {
   return res.status(200).send('DELETED')
 };
 
+const getQuizBycode = async (req = request, res = response) => {
+
+  const { code } = req.params;
+  const query = { code: code };
+  
+  try {
+    const quizDB = await Quiz.find(query);
+
+    return res.status(200).json({
+      status: "OK",
+      quizDB
+    })
+  } catch (error) {
+    return res.status(500).json({
+      status: "Error",
+      msg   : "Failed to get quiz"
+    })
+  }
+
+  
+
+}
+
 module.exports = {
   getQuizs,
   createQuiz,
@@ -157,5 +180,6 @@ module.exports = {
   updateQuiz,
   deleteQuiz,
   joinToQuiz,
-  getQuizzesByUser
+  getQuizzesByUser,
+  getQuizBycode
 };

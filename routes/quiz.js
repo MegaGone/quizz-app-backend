@@ -96,4 +96,15 @@ router.delete('/:id',
 ]
 ,controller.deleteQuiz);
 
+router.get('/code/:code', 
+[
+  validateJWT,
+  check('code', 'Code Required').not().isEmpty(),
+  check('code', 'Invalid code',).isLength({ min: 7 }),
+  check('code').custom( verifyCodeToQuiz ),
+  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
+  validateFields
+]
+,controller.getQuizBycode)
+
 module.exports = router;
