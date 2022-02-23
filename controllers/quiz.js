@@ -35,7 +35,7 @@ const createQuiz = async (req = request, res = response) => {
 
     await quiz.save();
 
-    return res.status(200).json(quiz)
+    return res.status(200).send('Quiz Created')
 
   } catch (error) {
     console.log(error);
