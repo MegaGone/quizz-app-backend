@@ -107,4 +107,6 @@ router.get('/code/:code',
 ]
 ,controller.getQuizBycode)
 
+router.delete('/question/:quizID/:questionID', controller.deleteQuestion)
+
 module.exports = router;

@@ -168,8 +168,25 @@ const getQuizBycode = async (req = request, res = response) => {
       msg   : "Failed to get quiz"
     })
   }
+}
 
-  
+const deleteQuestion = async ( req = request, res = response ) => {
+
+  const { quizID, questionID } = req.params;
+
+  try {
+    
+    const quizDB = await Quiz.updateMany(
+      { },
+      { $pull: { questions: { _id: questionID }}}
+    )
+
+    return res.status(200).send("Question deleted")
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send('ERROR: Deleting question')
+  }
 
 }
 
@@ -181,5 +198,6 @@ module.exports = {
   deleteQuiz,
   joinToQuiz,
   getQuizzesByUser,
-  getQuizBycode
+  getQuizBycode,
+  deleteQuestion
 };
