@@ -170,9 +170,37 @@ const getQuizBycode = async (req = request, res = response) => {
   }
 }
 
+/***** QUESTIONsS *****/
+const addQuestion = async (req = request, res = response ) => {
+
+  const { id } = req.params;
+
+  const { title, answers } = req.body;
+
+  const temporalAnswer = {
+    title,
+    answers
+  }
+
+  try {
+     
+    const quizDB = await Quiz.findById(id);
+    quizDB.questions.push(temporalAnswer);
+    await quizDB.save();
+
+    return res.json(quizDB)
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send('ERROR: Deleting question.')
+  }
+
+}
+
+
 const deleteQuestion = async ( req = request, res = response ) => {
 
-  const { quizID, questionID } = req.params;
+  const { questionID } = req.params;
 
   try {
     
@@ -199,5 +227,6 @@ module.exports = {
   joinToQuiz,
   getQuizzesByUser,
   getQuizBycode,
-  deleteQuestion
+  deleteQuestion,
+  addQuestion
 };

@@ -107,6 +107,27 @@ router.get('/code/:code',
 ]
 ,controller.getQuizBycode)
 
-router.delete('/question/:quizID/:questionID', controller.deleteQuestion)
+/***** QUESIONS *****/ 
+
+router.post('/question/:id', 
+[
+  validateJWT,
+  check('id', 'Invalid quizID').isMongoId(),
+  check('title', 'Title required').not().isEmpty(),
+  check('answers', 'The question must be at least 2 answers').isArray({ min: 2 }),
+  validateFields
+]
+,controller.addQuestion)
+
+router.delete('/question/:quizID/:questionID', 
+[
+  validateJWT,
+  check('quizID', 'Invalid ID').isMongoId(),
+  check('quizID').custom( verifyQuizById ),
+  check('questionID', 'Invalid ID').isMongoId(),
+  haveRoles('ADMIN_ROLE', 'USER_ROLE'),
+  validateFields
+]
+,controller.deleteQuestion)
 
 module.exports = router;
