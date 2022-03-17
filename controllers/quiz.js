@@ -210,7 +210,10 @@ const updateQuestion = async ( req = request, res = response ) => {
      { $set: { "questions.$.title": title, "questions.$.answers": answers }}
    )
 
-    return res.status(200).json(quizDB)
+    return res.status(200).json({
+      msg: 'UPDATED',
+      quizDB
+    })
 
   } catch (error) {
     console.log(error);

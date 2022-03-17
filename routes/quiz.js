@@ -120,7 +120,18 @@ router.post('/question/:id',
 ,controller.addQuestion)
 
 
-router.put('/question/:id/:questionId', controller.updateQuestion)
+router.put('/question/:id/:questionId', 
+[
+  validateJWT,
+  check('id', 'Invalid Quiz').not().isEmpty(),
+  check('id', 'Invalid quizID').isMongoId(),
+  check('questionId', 'Invalid Question').not().isEmpty(),
+  check('questionId', 'Invalid quizID').isMongoId(),
+  check('title', 'Title required').not().isEmpty(),
+  check('answers', 'The question must be at least 2 answers').isArray({ min: 2 }),
+  validateFields
+]
+,controller.updateQuestion)
 
 router.delete('/question/:quizID/:questionID', 
 [
