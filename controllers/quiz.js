@@ -197,6 +197,28 @@ const addQuestion = async (req = request, res = response ) => {
 
 }
 
+const updateQuestion = async ( req = request, res = response ) => {
+
+  const { id, questionId } = req.params;
+
+  const { title, answers } = req.body;
+
+  try {
+
+   const quizDB = await Quiz.updateOne(
+     { _id: id,  "questions._id": questionId },
+     { $set: { "questions.$.title": title, "questions.$.answers": answers }}
+   )
+
+    return res.status(200).json(quizDB)
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send('ERROR: Updating question')
+  }
+
+
+}
 
 const deleteQuestion = async ( req = request, res = response ) => {
 
@@ -228,5 +250,6 @@ module.exports = {
   getQuizzesByUser,
   getQuizBycode,
   deleteQuestion,
-  addQuestion
+  addQuestion,
+  updateQuestion
 };

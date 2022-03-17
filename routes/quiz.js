@@ -119,6 +119,9 @@ router.post('/question/:id',
 ]
 ,controller.addQuestion)
 
+
+router.put('/question/:id/:questionId', controller.updateQuestion)
+
 router.delete('/question/:quizID/:questionID', 
 [
   validateJWT,
