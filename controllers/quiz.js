@@ -170,7 +170,7 @@ const getQuizBycode = async (req = request, res = response) => {
   }
 }
 
-/***** QUESTIONsS *****/
+/***** QUESTIONS *****/
 const addQuestion = async (req = request, res = response ) => {
 
   const { id } = req.params;
@@ -184,11 +184,15 @@ const addQuestion = async (req = request, res = response ) => {
 
   try {
      
-    const quizDB = await Quiz.findById(id);
-    quizDB.questions.push(temporalAnswer);
-    await quizDB.save();
+    const quizDB = await Quiz.updateOne(
+      { _id: id },
+      { $push: { questions: temporalAnswer } }
+    )
 
-    return res.json(quizDB)
+    return res.status(200).json({
+      msg: "CREATED",
+      quizDB
+    })
 
   } catch (error) {
     console.log(error);
