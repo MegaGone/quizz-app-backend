@@ -76,6 +76,30 @@ const joinToQuiz = async ( req = request, res = response ) => {
 
 }
 
+const removeParticipant = async ( req = request, res = response ) => {
+
+  const { quizId } = req.params;
+  const { user } = req.body;
+
+  try {
+    
+    const quizDB = await Quiz.updateMany(
+      { _id: quizId },
+      { $pull: { participants: { userId: user }}}
+    )
+
+    console.log(quizDB);
+
+
+    return res.status(200).send(quizId)
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("ERROR: Removing participant")
+  }
+
+
+}
+
 const getQuiz = async (req = request, res = response) => {
 
   // Validate if, the autor dont 
@@ -258,5 +282,6 @@ module.exports = {
   getQuizBycode,
   deleteQuestion,
   addQuestion,
-  updateQuestion
+  updateQuestion,
+  removeParticipant
 };

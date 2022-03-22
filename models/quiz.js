@@ -36,7 +36,7 @@ const QuestionSchema = Schema({
         required: [true, "Question title required"]
     },
     answers: [answerSchema]
-}, { _id: false });
+});
 
 const QuizSchema = Schema({
     title: {

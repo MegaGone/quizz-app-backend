@@ -51,6 +51,19 @@ router.post('/join',
 ]
 ,controller.joinToQuiz)
 
+
+router.delete('/remove/:quizId', 
+[
+  validateJWT,
+  check('quizId', 'QuizId required').not().isEmpty(), 
+  check('quizId', 'Invalid quizId').isMongoId(),
+  check('quizId').custom(verifyQuizById),
+  check('user', 'userId required').not().isEmpty(),
+  check('user', 'Invalid userId').isMongoId(),
+  validateFields
+]
+,controller.removeParticipant)
+
 // Get Quizzes By User
 router.get('/quizzes', validateJwtToRenewToken, controller.getQuizzesByUser)
 
@@ -78,11 +91,11 @@ router.put('/:id',
   check('questions', "The quiz must be at least 5 questions").isArray({ min: 5}),
   check('questions.*.title', "Invalid title question").not().isEmpty(),
   check('questions.*.answers', 'The question must be at least 2 answers').isArray({ min:2 }),
-  check('participants', "Participants must be at least 1 participants").isArray({ min: 1 }),
-  check('participants.*.name', "Name of participant required").not().isEmpty(),
-  check('participants.*.name').custom( validateSpaces ),
-  check('participants.*.userId', 'User ID required').not().isEmpty(),
-  check('participants.*.joinIn', 'Date of join required').not().isEmpty(),
+  // check('participants', "Participants must be at least 1 participants").isArray({ min: 1 }),
+  // check('participants.*.name', "Name of participant required").not().isEmpty(),
+  // check('participants.*.name').custom( validateSpaces ),
+  // check('participants.*.userId', 'User ID required').not().isEmpty(),
+  // check('participants.*.joinIn', 'Date of join required').not().isEmpty(),
   validateFields
 ]
 ,controller.updateQuiz);
