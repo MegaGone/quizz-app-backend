@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
-const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken } = require('../middlewares')
+const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken, verifyParticipant } = require('../middlewares')
 
 // Controller
 const controller = require('../controllers/quiz');
@@ -60,6 +60,7 @@ router.delete('/remove/:quizId',
   check('quizId').custom(verifyQuizById),
   check('user', 'userId required').not().isEmpty(),
   check('user', 'Invalid userId').isMongoId(),
+  verifyParticipant,
   validateFields
 ]
 ,controller.removeParticipant)

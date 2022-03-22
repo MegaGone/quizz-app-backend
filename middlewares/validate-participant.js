@@ -30,6 +30,38 @@ const validatePartipant = async (req = request, res = response, next ) => {
     
 }
 
+const verifyParticipant = async ( req = request, res = response, next ) => {
+
+    const { quizId } = req.params;
+    const { user } = req.body;
+
+    try {
+        
+        const quizDB = await Quiz.findById(quizId);
+
+        if(!quizDB) {
+            return res.status(400).send("ERROR: Quiz doesn't exist")
+        }
+
+        const { participants } = quizDB;
+
+        const existParticipant = participants.findIndex(participant => participant.userId == user);
+
+        if(existParticipant >= 0) {
+            next();
+        } else {
+            return res.status(400).send('ERROR: User are not participant of this quiz')
+        }
+        
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('ERROR: To verify participant')
+    }
+
+}
+
 module.exports = {
-    validatePartipant
+    validatePartipant,
+    verifyParticipant
 }

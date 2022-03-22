@@ -67,7 +67,7 @@ const joinToQuiz = async ( req = request, res = response ) => {
       { upsert: false}
     );
 
-    return res.send('OK')
+    return res.status(400).send('Joined to the quiz')
 
   } catch (error) {
     console.log(error);
@@ -88,10 +88,7 @@ const removeParticipant = async ( req = request, res = response ) => {
       { $pull: { participants: { userId: user }}}
     )
 
-    console.log(quizDB);
-
-
-    return res.status(200).send(quizId)
+    return res.status(200).send('Participant removed')
   } catch (error) {
     console.log(error);
     return res.status(500).send("ERROR: Removing participant")

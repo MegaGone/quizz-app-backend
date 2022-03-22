@@ -17,7 +17,7 @@ const participantsSchema = Schema({
         type: Number,
         default: 0
     }
-})
+}, { _id: false });
 
 const answerSchema = Schema({
     title: {
