@@ -32,8 +32,7 @@ const validatePartipant = async (req = request, res = response, next ) => {
 
 const verifyParticipant = async ( req = request, res = response, next ) => {
 
-    const { quizId } = req.params;
-    const { user } = req.body;
+    const { quizId, user } = req.params;
 
     try {
         

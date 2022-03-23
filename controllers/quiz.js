@@ -51,7 +51,8 @@ const joinToQuiz = async ( req = request, res = response ) => {
 
   // Get the user data to the object Participant
   const { _id: userId, name } = req.user;
-  const joinIn = moment().format("MMM Do YY")
+  // const joinIn = moment().format("MMM Do YY")
+  const joinIn = moment().format("YYYY-MM-DD")
 
   const participant = {
     name,
@@ -78,8 +79,7 @@ const joinToQuiz = async ( req = request, res = response ) => {
 
 const removeParticipant = async ( req = request, res = response ) => {
 
-  const { quizId } = req.params;
-  const { user } = req.body;
+  const { quizId, user } = req.params;
 
   try {
     

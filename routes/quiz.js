@@ -52,7 +52,7 @@ router.post('/join',
 ,controller.joinToQuiz)
 
 
-router.delete('/remove/:quizId', 
+router.delete('/remove/:quizId/:user', 
 [
   validateJWT,
   check('quizId', 'QuizId required').not().isEmpty(), 
