@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
-const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken, verifyParticipant } = require('../middlewares')
+const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken, verifyParticipant, verifyQuizByUser } = require('../middlewares')
 
 // Controller
 const controller = require('../controllers/quiz');
@@ -82,6 +82,7 @@ router.get('/:id',
 // UPDATE QUIZ
 router.put('/:id', 
 [
+  validateJWT,
   check('id', 'Invalid ID').not().isEmpty(),
   check('id').custom( verifyQuizById ),
   check('title', "Title required").not().isEmpty(),
@@ -104,6 +105,8 @@ router.put('/:id',
 // DELETE QUIZ
 router.delete('/:id', 
 [
+  validateJWT,
+  verifyQuizByUser,
   check('id', 'Invalid ID').isMongoId(),
   check('id').custom( verifyQuizById ),
   validateFields
