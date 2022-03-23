@@ -51,13 +51,14 @@ router.post('/join',
 ]
 ,controller.joinToQuiz)
 
-
-router.delete('/remove/:quizId/:user', 
+// REMOVE USER
+router.delete('/remove/:id/:user', 
 [
   validateJWT,
-  check('quizId', 'QuizId required').not().isEmpty(), 
-  check('quizId', 'Invalid quizId').isMongoId(),
-  check('quizId').custom(verifyQuizById),
+  verifyQuizByUser,
+  check('id', 'QuizId required').not().isEmpty(), 
+  check('id', 'Invalid quizId').isMongoId(),
+  check('id').custom(verifyQuizById),
   check('user', 'userId required').not().isEmpty(),
   check('user', 'Invalid userId').isMongoId(),
   verifyParticipant,
@@ -83,6 +84,7 @@ router.get('/:id',
 router.put('/:id', 
 [
   validateJWT,
+  verifyQuizByUser,
   check('id', 'Invalid ID').not().isEmpty(),
   check('id').custom( verifyQuizById ),
   check('title', "Title required").not().isEmpty(),

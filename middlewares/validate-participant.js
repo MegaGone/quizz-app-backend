@@ -32,11 +32,11 @@ const validatePartipant = async (req = request, res = response, next ) => {
 
 const verifyParticipant = async ( req = request, res = response, next ) => {
 
-    const { quizId, user } = req.params;
+    const { id, user } = req.params;
 
     try {
         
-        const quizDB = await Quiz.findById(quizId);
+        const quizDB = await Quiz.findById(id);
 
         if(!quizDB) {
             return res.status(400).send("ERROR: Quiz doesn't exist")

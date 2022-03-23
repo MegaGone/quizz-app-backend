@@ -79,12 +79,12 @@ const joinToQuiz = async ( req = request, res = response ) => {
 
 const removeParticipant = async ( req = request, res = response ) => {
 
-  const { quizId, user } = req.params;
+  const { id, user } = req.params;
 
   try {
     
     const quizDB = await Quiz.updateMany(
-      { _id: quizId },
+      { _id: id },
       { $pull: { participants: { userId: user }}}
     )
 
