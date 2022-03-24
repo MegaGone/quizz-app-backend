@@ -29,6 +29,37 @@ const verifyQuizByUser = async (req = request, res = response, next) => {
 
 }
 
+const verifyQuizByCode = async (req = request, res = response, next) => {
+
+    const token = req.header('x-token');
+
+    const { code } = req.params;
+
+    try {
+        
+        const { uid } = jwt.verify(token, process.env.SECRETKEY);
+
+        const author = await Quiz.findOne({code: code}).then((quiz) => quiz.author)
+        .catch((err) => {
+           return res.status(400).send('ERROR: To verify quiz') 
+        })
+
+        console.log(author);
+
+        if(author != uid) {
+            return res.status(401).send('Unauthorized')
+        } 
+
+        next();
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send('ERROR: To verify code')
+    }
+
+}
+
 module.exports = {
-    verifyQuizByUser
+    verifyQuizByUser,
+    verifyQuizByCode
 }

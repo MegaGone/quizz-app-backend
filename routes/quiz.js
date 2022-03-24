@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
-const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken, verifyParticipant, verifyQuizByUser } = require('../middlewares')
+const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken, verifyParticipant, verifyQuizByUser, verifyQuizByCode } = require('../middlewares')
 
 // Controller
 const controller = require('../controllers/quiz');
@@ -95,11 +95,6 @@ router.put('/:id',
   check('questions', "The quiz must be at least 5 questions").isArray({ min: 5}),
   check('questions.*.title', "Invalid title question").not().isEmpty(),
   check('questions.*.answers', 'The question must be at least 2 answers').isArray({ min:2 }),
-  // check('participants', "Participants must be at least 1 participants").isArray({ min: 1 }),
-  // check('participants.*.name', "Name of participant required").not().isEmpty(),
-  // check('participants.*.name').custom( validateSpaces ),
-  // check('participants.*.userId', 'User ID required').not().isEmpty(),
-  // check('participants.*.joinIn', 'Date of join required').not().isEmpty(),
   validateFields
 ]
 ,controller.updateQuiz);
@@ -115,9 +110,11 @@ router.delete('/:id',
 ]
 ,controller.deleteQuiz);
 
+// GET QUIZ BY CODE
 router.get('/code/:code', 
 [
   validateJWT,
+  verifyQuizByCode,
   check('code', 'Code Required').not().isEmpty(),
   check('code', 'Invalid code',).isLength({ min: 7 }),
   check('code').custom( verifyCodeToQuiz ),
