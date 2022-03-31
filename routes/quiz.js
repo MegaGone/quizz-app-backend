@@ -34,6 +34,8 @@ router.post('/',
   check('questions.*.title', "Invalid title question").not().isEmpty(),
   check('questions.*.answers', 'The question must be at least 2 answers').isArray({ min:2 }),
   check('participants', "We need a participants").isArray({ min: 0 }),
+  check('lapse', 'Lapse required').not().isEmpty(),
+  check('lapse').isNumeric(),
   validateFields  
 ]
 ,controller.createQuiz);
@@ -90,6 +92,8 @@ router.put('/:id',
   check('title', "Title required").not().isEmpty(),
   check('title', "Title must be at least 5 chars").isLength({ min: 5}),
   check('title').custom( validateSpaces ),
+  check('lapse', 'Lapse required').not().isEmpty(),
+  check('lapse', 'Invalid lapse').isNumeric(),
   check('description', "Description required").not().isEmpty(),
   check('description', "Description must be at least 10 chars").isLength({ min: 10 }),
   check('questions', "The quiz must be at least 5 questions").isArray({ min: 5}),

@@ -24,14 +24,14 @@ const createQuiz = async (req = request, res = response) => {
 
   // TODO: Validar que el title sea unico por User
   const { _id: author } = req.user;
-  const { questions, title, description } = req.body;
+  const { questions, title, description, lapse } = req.body;
 
   // GENERATE THE CODE TO THE QUIZ
   const code = nanoid(7).toUpperCase();
 
   try {
     
-    const quiz = new Quiz({ title, description, questions, author, code })
+    const quiz = new Quiz({ title, description, questions, author, code, lapse })
 
     await quiz.save();
 

@@ -57,7 +57,11 @@ const QuizSchema = Schema({
         required: [true, "Code required"]
     },
     questions: [QuestionSchema],
-    participants: [participantsSchema]
+    participants: [participantsSchema],
+    lapse: {
+        type: Number,
+        required: true
+    }
 });
 
 QuizSchema.methods.toJSON = function () {

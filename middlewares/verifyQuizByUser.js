@@ -43,9 +43,6 @@ const verifyQuizByCode = async (req = request, res = response, next) => {
         .catch((err) => {
            return res.status(400).send('ERROR: To verify quiz') 
         })
-
-        console.log(author);
-
         if(author != uid) {
             return res.status(401).send('Unauthorized')
         } 
