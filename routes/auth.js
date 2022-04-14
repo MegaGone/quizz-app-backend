@@ -8,7 +8,7 @@ const { validateSpaces } = require('../helpers')
 const controller = require('../controllers/auth');
 
 // Middlewares
-const { validateFields, validateJwtToRenewToken } = require('../middlewares');
+const { validateFields, validateJwtToRenewToken, validateJWT, validateCurrentPassword } = require('../middlewares');
 
 const router = Router();
 
@@ -30,5 +30,19 @@ router.post('/google',
 ,controller.googleSignIn)
 
 router.get('/renew', validateJwtToRenewToken, controller.renewToken)
+
+router.get('/session', validateJWT, controller.getSession)
+
+router.post('/password', 
+[
+    validateJWT,
+    check('currentPassword',    'Current Password Unexpected').not().isEmpty(),
+    check('newPassword',        'New Password Unexpected').not().isEmpty(),
+    check('currentPassword',    'Password must be at least 6 characters').isLength({min: 6}),
+    check('newPassword',        'Password must be at least 6 characters').isLength({min: 6}),
+    validateCurrentPassword,
+    validateFields
+]
+, controller.changePassword)
 
 module.exports = router;
