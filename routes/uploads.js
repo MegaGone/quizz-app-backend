@@ -11,4 +11,11 @@ const router = Router();
 
 router.post('/', controller.uploadFile);
 
+router.put('/:id', 
+[
+    validateJWT,
+    check('id', 'User not valid').isMongoId(),
+    validateFields
+], controller.updateImage)
+
 module.exports = router;

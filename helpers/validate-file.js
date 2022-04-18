@@ -24,7 +24,7 @@ const validateFile = async ( files, extentions = ['png', 'jpg', 'jpeg', 'gif'], 
                 return reject(`Cannot move the file`)
              }
 
-            resolve(uploadPath);
+            resolve(temporalName);
         });
     })
 
