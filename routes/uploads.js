@@ -5,15 +5,16 @@ const { check } = require('express-validator');
 const controller = require('../controllers/uploads');
 
 // Middlewares
-const { validateJWT, validateFields } = require('../middlewares');
+const { validateJWT, validateFields, validateFiles } = require('../middlewares');
 
 const router = Router();
 
-router.post('/', controller.uploadFile);
+router.post('/', validateFiles, controller.uploadFile);
 
 router.put('/:id', 
 [
     validateJWT,
+    validateFiles,
     check('id', 'User not valid').isMongoId(),
     validateFields
 ], controller.updateImage)

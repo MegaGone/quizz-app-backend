@@ -4,13 +4,8 @@ const { User } = require('../models')
 
 const uploadFile = async (req = request, res = response) => {
   
-    //Validar que venga file
-    if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
-      return res.status(400).send('No files were uploaded.');
-    }
-
     try {
-        const pathFile = await validateFile(req.files, undefined, 'imgs');
+        const pathFile = await validateFile(req.files, undefined, undefined);
         
         res.status(200).send(pathFile)
     } catch (error) {

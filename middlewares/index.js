@@ -4,6 +4,8 @@ const { validateJWT, validateJwtToRenewToken } = require('./validate-jwt');
 const { validatePartipant, verifyParticipant } = require('./validate-participant'); 
 const { verifyQuizByUser, verifyQuizByCode } = require('./verifyQuizByUser');
 const { validateCurrentPassword } = require('./validate-password');
+const { validateFiles } = require('./validate-files');
+
 
 
 module.exports = {
@@ -15,5 +17,6 @@ module.exports = {
     verifyParticipant,
     verifyQuizByUser,
     verifyQuizByCode,
-    validateCurrentPassword
+    validateCurrentPassword,
+    validateFiles
 }
