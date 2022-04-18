@@ -2,6 +2,7 @@ const { generateJWT } = require('./jwt');
 const { validateRole, validateEmail, verifyUserById, verifyQuizById, verifyCodeToQuiz } = require('./db-validators')
 const { validateSpaces } = require('./validations');
 const { googleVerify } = require('./google-verify');
+const { validateFile } = require('./validate-file');
 
 module.exports = {
     generateJWT,
@@ -11,5 +12,6 @@ module.exports = {
     validateSpaces,
     verifyQuizById,
     verifyCodeToQuiz,
-    googleVerify
+    googleVerify,
+    validateFile
 }
