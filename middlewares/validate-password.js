@@ -18,8 +18,6 @@ const validateCurrentPassword = async (req = request, res = response, next) => {
         trimedNewPassword = trimedNewPassword.replace(/ +/g, "");
 
         const hashedPassword = bcrypt.compareSync(trimedCurrentPassword, password)
-        
-        console.log(hashedPassword);
 
         if(!hashedPassword) {
             return res.status(400).send('ERROR: Current password Invalid');
