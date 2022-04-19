@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { validateFile } = require("../helpers");
+const { validateFile, getImage } = require("../helpers");
 const { User } = require('../models')
 const fs = require('fs');
 const path = require("path");
@@ -113,9 +113,30 @@ const showImage = async (req = request, res = response) => {
     return res.status(200).sendFile(noImagePath);
 }
 
+const showImageCloudinary = async (req = request, res = response) => {
+
+    const { id } = req.params;
+
+    let model = await User.findById(id);
+
+    if (!model) {
+        return res.status(400).send('User not valid')
+    }
+
+    if (model.img) {
+        return res.status(200).send(model.img);
+    }
+
+    // Default image
+    const noImagePath = path.join(__dirname, '../assets/noprofile.jpg')
+
+    return res.status(200).sendFile(noImagePath);
+}
+
 module.exports = {
     uploadFile,
     updateImage,
     showImage,
-    updateImageCloudinary
+    updateImageCloudinary,
+    showImageCloudinary
 }

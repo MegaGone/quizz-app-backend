@@ -26,6 +26,6 @@ router.get('/:id',
         check('id', 'User not valid').isMongoId(),
         validateFields
     ]
-    , controller.showImage)
+    , controller.showImageCloudinary)
 
 module.exports = router;
