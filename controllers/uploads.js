@@ -62,6 +62,11 @@ const showImage = async (req = request, res = response) => {
             return res.status(200).sendFile(pathImg);
         }
     }
+
+    // Default image
+    const noImagePath = path.join( __dirname, '../assets/noprofile.jpg' )
+
+    return res.status(200).sendFile(noImagePath);
 }
 
 module.exports = {
