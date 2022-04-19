@@ -1,4 +1,4 @@
-const { Router  } = require('express');
+const { Router } = require('express');
 const { check } = require('express-validator');
 
 // Controller
@@ -11,12 +11,21 @@ const router = Router();
 
 router.post('/', validateFiles, controller.uploadFile);
 
-router.put('/:id', 
-[
-    validateJWT,
-    validateFiles,
-    check('id', 'User not valid').isMongoId(),
-    validateFields
-], controller.updateImage)
+router.put('/:id',
+    [
+        validateJWT,
+        validateFiles,
+        check('id', 'User not valid').isMongoId(),
+        validateFields
+    ]
+    , controller.updateImage)
+
+router.get('/:id',
+    [
+        validateJWT,
+        check('id', 'User not valid').isMongoId(),
+        validateFields
+    ]
+    , controller.showImage)
 
 module.exports = router;

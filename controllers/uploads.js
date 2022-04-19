@@ -46,7 +46,26 @@ const updateImage = async (req = request, res = response) => {
 
 }
 
+const showImage = async (req = request, res = response) => {
+
+    const { id } = req.params;
+
+    let model = await User.findById(id);
+
+    if (!model) {
+        return res.status(400).send('User not valid')
+    }
+
+    if (model.img) {
+        const pathImg = path.join(__dirname, '../uploads', model.img);
+        if (fs.existsSync(pathImg)) {
+            return res.status(200).sendFile(pathImg);
+        }
+    }
+}
+
 module.exports = {
     uploadFile,
-    updateImage
+    updateImage,
+    showImage
 }
