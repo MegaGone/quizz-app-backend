@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 
 const cloudinary = require('cloudinary').v2
-cloudinary.config( process.env.CLOUDINARY_URL )
+cloudinary.config(process.env.CLOUDINARY_URL)
 
 const uploadFile = async (req = request, res = response) => {
 
@@ -63,20 +63,28 @@ const updateImageCloudinary = async (req = request, res = response) => {
 
 
     if (model.img) {
-        
+
         const imgSplited    = model.img.split('/');
         const img           = imgSplited[imgSplited.length - 1];
-        const [ public_id ] = img.split('.');
-        cloudinary.uploader.destroy(public_id)
+        const [public_id]   = img.split('.');
+        // cloudinary.uploader.destroy( public_id, { });
+        cloudinary.uploader.destroy( `${process.env.CLOUDINARY_FOLDER}/${public_id}` );
     }
 
     // Obtengo el path temporal
     const { tempFilePath } = req.files.file;
 
-    // Le paso el path temporal a cloudinary y de la respuesta solo necesito la secure_url
-    const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-    model.img = secure_url;
-    await model.save();
+    try {
+        // Le paso el path temporal a cloudinary y de la respuesta solo necesito la secure_url
+        const { secure_url } = await cloudinary.uploader.upload(tempFilePath, { folder: process.env.CLOUDINARY_FOLDER });
+        model.img = secure_url;
+        await model.save();
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('Error to upload file.')
+    }
+
 
     return res.status(200).json(model);
 
@@ -100,7 +108,7 @@ const showImage = async (req = request, res = response) => {
     }
 
     // Default image
-    const noImagePath = path.join( __dirname, '../assets/noprofile.jpg' )
+    const noImagePath = path.join(__dirname, '../assets/noprofile.jpg')
 
     return res.status(200).sendFile(noImagePath);
 }
