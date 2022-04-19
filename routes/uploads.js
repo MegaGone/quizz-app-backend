@@ -18,7 +18,7 @@ router.put('/:id',
         check('id', 'User not valid').isMongoId(),
         validateFields
     ]
-    , controller.updateImage)
+    , controller.updateImageCloudinary)
 
 router.get('/:id',
     [
