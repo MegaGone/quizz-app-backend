@@ -63,7 +63,11 @@ const updateImageCloudinary = async (req = request, res = response) => {
 
 
     if (model.img) {
-        // TODO: Remove images
+        
+        const imgSplited    = model.img.split('/');
+        const img           = imgSplited[imgSplited.length - 1];
+        const [ public_id ] = img.split('.');
+        cloudinary.uploader.destroy(public_id)
     }
 
     // Obtengo el path temporal
