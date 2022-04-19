@@ -112,7 +112,7 @@ const changePassword = async (req = request, res = response) => {
 
   const currentPassword = req.currentPass;
   const newPassword     = req.newPass;
-  const { _id: uid }             = req.user;
+  const { _id: uid }    = req.user;
 
   if(currentPassword == newPassword) {
     return res.status(400).send('ERROR: The new password must not be the same as the current password.')
