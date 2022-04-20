@@ -30,6 +30,9 @@ const createUser = async (req = request, res = response) => {
   const salt = bcrypt.genSaltSync();
   user.password = bcrypt.hashSync(password, salt);
 
+  // Set default image
+  user.img = "https://res.cloudinary.com/dntsavc6r/image/upload/v1650422395/ngQuiz/noprofile_oqt2bu.jpg";
+
   await user.save();
 
   const token = await generateJWT( user.id );
