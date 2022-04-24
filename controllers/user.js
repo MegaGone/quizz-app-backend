@@ -122,12 +122,13 @@ const updateUserv2 = async ( req = request, res = response ) => {
 
   const { name } = req.body;
   const { id } = req.params;
-  const { file } = req.files;
+  const file = req.files?.file;
 
   const userDB = await User.findById(id);
   userDB.name = name;
 
-  if ( file != undefined ) {
+  // file != undefined || file != null || 
+  if (file) {
     try {
       let imageUploaded = await uploadFile(file, ['png', 'jpg', 'jpeg', 'gif'], id);
       userDB.img = imageUploaded;
