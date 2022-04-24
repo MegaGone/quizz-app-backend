@@ -11,10 +11,17 @@ const { validateFields, haveRoles, validateJWT } = require('../middlewares');
 
 const router = Router();
 
-router.get('/', Controller.getUsers);
+router.get('/', 
+[
+    validateJWT,
+    haveRoles('ADMIN_ROLE'),
+    validateFields
+]
+,Controller.getUsers);
 
 router.post('/', 
 [
+    validateJWT,
     check('name', 'Name is required').not().isEmpty(),
     check('name').custom( validateSpaces ),
     check('email', 'Invalid email').isEmail(),
@@ -28,6 +35,7 @@ router.post('/',
 
 router.get('/:id', 
 [
+    validateJWT,
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom( verifyUserById ),
     validateFields
@@ -36,6 +44,7 @@ router.get('/:id',
 
 router.put('/:id', 
 [
+    validateJWT,
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(verifyUserById),
     validateFields
