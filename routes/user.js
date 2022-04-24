@@ -40,7 +40,7 @@ router.put('/:id',
     check('id').custom(verifyUserById),
     validateFields
 ]
-,Controller.updateUser)
+,Controller.updateUserv2)
 
 router.delete('/:id', 
 [

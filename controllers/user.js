@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const bcrypt = require('bcryptjs');
 
 const { User } = require('../models');
-const { generateJWT } = require("../helpers");
+const { generateJWT, uploadFile } = require("../helpers");
 
 const getUsers = async (req = request, res = response) => {
   
@@ -118,11 +118,37 @@ const purgeDeleteUsers = async(req = request, res = response ) => {
   })
 }
 
+const updateUserv2 = async ( req = request, res = response ) => {
+
+  const { name } = req.body;
+  const { id } = req.params;
+  const { file } = req.files;
+
+  const userDB = await User.findById(id);
+  userDB.name = name;
+
+  if ( file != undefined ) {
+    try {
+      let imageUploaded = await uploadFile(file, ['png', 'jpg', 'jpeg', 'gif'], id);
+      userDB.img = imageUploaded;
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  }
+
+  await userDB.save();
+
+  return res.status(200).json(userDB)
+  
+
+}
+
 module.exports = {
   getUsers,
   createUser,
   getUser,
   updateUser,
   deleteUser,
-  purgeDeleteUsers
+  purgeDeleteUsers,
+  updateUserv2
 };

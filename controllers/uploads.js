@@ -113,9 +113,30 @@ const showImage = async (req = request, res = response) => {
     return res.status(200).sendFile(noImagePath);
 }
 
+const showImageCloudinary = async (req = request, res = response) => {
+
+    const { id } = req.params;
+
+    let model = await User.findById(id);
+
+    if (!model) {
+        return res.status(400).send('User not valid')
+    }
+
+    if (model.img) {
+        return res.status(200).send(model.img)
+    }
+
+    // Default image
+    const noImagePath = "https://res.cloudinary.com/dntsavc6r/image/upload/v1650422395/ngQuiz/noprofile_oqt2bu.jpg";
+
+    return res.status(200).sendFile(noImagePath);
+}
+
 module.exports = {
     uploadFile,
     updateImage,
     showImage,
-    updateImageCloudinary
+    updateImageCloudinary,
+    showImageCloudinary
 }
