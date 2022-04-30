@@ -34,13 +34,8 @@ const createUser = async (req = request, res = response) => {
   user.img = "https://res.cloudinary.com/dntsavc6r/image/upload/v1650422395/ngQuiz/noprofile_oqt2bu.jpg";
 
   await user.save();
-
-  const token = await generateJWT( user.id );
-
-  return res.status(201).json({
-    msg: 'User created succesfully',
-    token
-  })
+  
+  return res.status(201).send('Ok')
 
 };
 
