@@ -47,7 +47,6 @@ router.post('/join',
   check('code', 'Code required').not().isEmpty(),
   check('code', 'The code must be at least 7 chars').isLength({ min: 7 }),
   check('code').custom( verifyCodeToQuiz ),
-  validateFields,
   validatePartipant,
   validateFields
 ]

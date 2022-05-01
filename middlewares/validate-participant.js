@@ -18,13 +18,13 @@ const validatePartipant = async (req = request, res = response, next ) => {
         const ids = participants.map(participant => participant.userId);
 
         if( ids.includes(id) ){
-            return res.status(400).send('ERROR: You have already participate in the quiz');
+            return res.status(400).send('You have already participate in the quiz.');
         } else {
             next();
         }
         
     } catch (error) {
-        return res.status(400).send('ERROR: You already participate in the quizz')
+        return res.status(400).send('ERROR: You already participate in the quizz.')
     }
 
     

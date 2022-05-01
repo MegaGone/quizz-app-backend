@@ -229,23 +229,30 @@ const joinToQuizGuest = async ( req = request, res = response) => {
 
   const { code, name, email } = req.body;
 
-  const quizDB = await Quiz.findOne({ code });
-  
-  if (!quizDB) {
-    return res.status(400).json({
-      ok: false,
-      message: 'Quiz not find.'
-    })
-  }
-  
-  if ( !name || !email) {
-    return res.status(400).json({
-      ok: false,
-      message: 'Arguments expected'
-    })
-  }
-
   try {
+
+    const quizDB = await Quiz.findOne({ code });
+  
+    // If quiz doesn't exist
+    if (!quizDB) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Quiz not find.'
+      })
+    }
+    
+    // If the participant exist
+    const { participants } = quizDB;
+
+    const ids = participants.map(p => (p.userId) ? p.userId : p.email);
+
+    if ( ids.includes(email) ) {
+      return res.status(400).json({
+        Ok: false,
+        message: 'You have already participate in the quiz'
+      })
+    }
+
 
     const joinIn = moment().format("YYYY-MM-DD")
   
