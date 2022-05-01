@@ -164,4 +164,21 @@ router.delete('/question/:quizID/:questionID',
 ]
 ,controller.deleteQuestion)
 
+/***** GUEST *****/ 
+router.post('/code/guest', 
+[
+  check('code', 'Code required').not().isEmpty(),
+  validateFields
+]
+, controller.getQuizByCodeGuest)
+
+router.post('/join/guest', 
+[
+  check('code',  'Code required').not().isEmpty(),
+  check('name',  'Name required').not().isEmpty(),
+  check('email', 'Email required').not().isEmpty(),
+  validateFields
+]
+, controller.joinToQuizGuest)
+
 module.exports = router;

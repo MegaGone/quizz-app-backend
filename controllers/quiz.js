@@ -68,11 +68,17 @@ const joinToQuiz = async ( req = request, res = response ) => {
       { upsert: false}
     );
 
-    return res.status(400).send('Joined to the quiz')
+    return res.status(200).json({
+      ok: true,
+      message: 'Joined'
+    })
 
   } catch (error) {
     console.log(error);
-    return res.status(500).send('ERROR: We have a error to join the quiz')
+    return res.status(500).json({
+      ok: false,
+      message: 'Error to join to the quiz'
+    })
   }
 
 }
@@ -191,7 +197,86 @@ const getQuizBycode = async (req = request, res = response) => {
   }
 }
 
-/***** QUESTIONS *****/
+/*################### GUEST ###################*/
+const getQuizByCodeGuest = async ( req = request, res = response ) => {
+
+  const { code } = req.body;
+
+  if (code.length < 7 ) {
+    return res.status(400).json({
+      Ok: false,
+      message: 'Invalid code.'
+    })
+  }
+
+  const quizDB = await Quiz.findOne({code});
+
+  if (!quizDB) {
+    return res.status(400).json({
+      ok: false,
+      message: 'Quiz not find.'
+    })
+  }
+
+  return res.json({
+    ok: true,
+    quizDB
+  })
+
+};
+
+const joinToQuizGuest = async ( req = request, res = response) => {
+
+  const { code, name, email } = req.body;
+
+  const quizDB = await Quiz.findOne({ code });
+  
+  if (!quizDB) {
+    return res.status(400).json({
+      ok: false,
+      message: 'Quiz not find.'
+    })
+  }
+  
+  if ( !name || !email) {
+    return res.status(400).json({
+      ok: false,
+      message: 'Arguments expected'
+    })
+  }
+
+  try {
+
+    const joinIn = moment().format("YYYY-MM-DD")
+  
+    const participant = {
+      name,
+      email,
+      joinIn
+    }
+
+    const quizToInsert = await Quiz.updateOne(
+      { code, 'participants.userId': { $nin: [participant.id] } },
+      { $push: { participants: participant } },
+      { upsert: false}
+    );
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Joined'
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      ok: false,
+      message: 'Error to join to the quiz'
+    })
+  }
+
+}
+
+/*################### QUESTIONS ###################*/
 const addQuestion = async (req = request, res = response ) => {
 
   const { id } = req.params;
@@ -280,5 +365,7 @@ module.exports = {
   deleteQuestion,
   addQuestion,
   updateQuestion,
-  removeParticipant
+  removeParticipant,
+  getQuizByCodeGuest,
+  joinToQuizGuest
 };
