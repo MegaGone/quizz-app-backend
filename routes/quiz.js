@@ -61,7 +61,7 @@ router.delete('/remove/:id/:user',
   check('id', 'Invalid quizId').isMongoId(),
   check('id').custom(verifyQuizById),
   check('user', 'userId required').not().isEmpty(),
-  check('user', 'Invalid userId').isMongoId(),
+  // check('user', 'Invalid userId').isMongoId(),
   verifyParticipant,
   validateFields
 ]
