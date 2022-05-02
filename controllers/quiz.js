@@ -69,14 +69,14 @@ const joinToQuiz = async ( req = request, res = response ) => {
     );
 
     return res.status(200).json({
-      ok: true,
+      Ok: true,
       message: 'Joined'
     })
 
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      ok: false,
+      Ok: false,
       message: 'Error to join to the quiz'
     })
   }
@@ -94,10 +94,16 @@ const removeParticipant = async ( req = request, res = response ) => {
       { $pull: { participants: { userId: user }}}
     )
 
-    return res.status(200).send('Participant removed')
+    return res.status(200).json({
+      Ok: true,
+      message: 'Participant removed'
+    })
   } catch (error) {
     console.log(error);
-    return res.status(500).send("ERROR: Removing participant")
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error removing participant'
+    })
   }
 
 
@@ -213,13 +219,13 @@ const getQuizByCodeGuest = async ( req = request, res = response ) => {
 
   if (!quizDB) {
     return res.status(400).json({
-      ok: false,
+      Ok: false,
       message: 'Quiz not find.'
     })
   }
 
   return res.json({
-    ok: true,
+    Ok: true,
     quizDB
   })
 
@@ -236,7 +242,7 @@ const joinToQuizGuest = async ( req = request, res = response) => {
     // If quiz doesn't exist
     if (!quizDB) {
       return res.status(400).json({
-        ok: false,
+        Ok: false,
         message: 'Quiz not find.'
       })
     }
@@ -269,14 +275,14 @@ const joinToQuizGuest = async ( req = request, res = response) => {
     );
 
     return res.status(200).json({
-      ok: true,
+      Ok: true,
       message: 'Joined'
     })
 
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      ok: false,
+      Ok: false,
       message: 'Error to join to the quiz'
     })
   }
