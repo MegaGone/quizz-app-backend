@@ -16,9 +16,6 @@ const participantsSchema = Schema({
     correctAnswers: {
         type: Number,
         default: 0
-    },
-    email: {
-        type: String
     }
 }, { _id: false });
 

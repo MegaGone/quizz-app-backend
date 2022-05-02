@@ -45,8 +45,10 @@ const createQuiz = async (req = request, res = response) => {
 };
 
 const joinToQuiz = async ( req = request, res = response ) => {
-  
-  // Get the code to join to the quiz
+
+  try {
+
+      // Get the code to join to the quiz
   const { code } = req.body;
 
   // Get the user data to the object Participant
@@ -59,8 +61,6 @@ const joinToQuiz = async ( req = request, res = response ) => {
     userId,
     joinIn
   }
-
-  try {
 
     const quizDB = await Quiz.updateOne(
       { code, 'participants.userId': { $nin: [participant.id] } },
@@ -244,7 +244,7 @@ const joinToQuizGuest = async ( req = request, res = response) => {
     // If the participant exist
     const { participants } = quizDB;
 
-    const ids = participants.map(p => (p.userId) ? p.userId : p.email);
+    const ids = participants.map(p => p.userId);
 
     if ( ids.includes(email) ) {
       return res.status(400).json({
@@ -258,7 +258,7 @@ const joinToQuizGuest = async ( req = request, res = response) => {
   
     const participant = {
       name,
-      email,
+      userId: email,
       joinIn
     }
 
