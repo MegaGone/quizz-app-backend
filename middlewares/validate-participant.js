@@ -9,7 +9,10 @@ const validatePartipant = async (req = request, res = response, next ) => {
     const quiz = await Quiz.find({code}); 
 
     if(!quiz){
-        return res.status(400).send('ERROR: The quiz dont exist')
+        return res.status(400).json({
+            Ok: false,
+            message: "The quiz doesn't exist"
+        })
     }
 
     try {
@@ -18,7 +21,10 @@ const validatePartipant = async (req = request, res = response, next ) => {
         const ids = participants.map(participant => participant.userId);
 
         if( ids.includes(id) ){
-            return res.status(400).send('You have already participate in the quiz.');
+            return res.status(400).json({
+                Ok: false,
+                message: 'You have already participate in the quiz.'
+            })
         } else {
             next();
         }
