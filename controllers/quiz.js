@@ -224,9 +224,10 @@ const getQuizByCodeGuest = async ( req = request, res = response ) => {
     })
   }
 
-  return res.json({
+  return res.status(200).json({
     Ok: true,
-    quizDB
+    message: "Exist",
+    code
   })
 
 };
@@ -276,7 +277,9 @@ const joinToQuizGuest = async ( req = request, res = response) => {
 
     return res.status(200).json({
       Ok: true,
-      message: 'Joined'
+      message: 'Joined',
+      quizDB,
+      player: participant
     })
 
   } catch (error) {
