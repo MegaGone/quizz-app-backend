@@ -66,7 +66,46 @@ const verifyParticipant = async ( req = request, res = response, next ) => {
 
 }
 
+const validatePlayer = async ( req = request, res = response, next ) => {
+
+    const { playerId, quizId } = req.body;
+
+    try {
+        const quizDB = await Quiz.findById(quizId);
+        
+        if (!quizDB) {
+            return res.status(400).json({
+                Ok: false,
+                message: "Quiz doesn't exist"
+            })
+        };
+
+        const { participants } = quizDB;
+
+        const ids = participants.map(p => p.userId);
+
+        if (!ids.includes(playerId)) {
+            return res.status(400).json({
+                Ok: false,
+                message: "User are not participant of this quiz."
+            })
+        }
+
+        next();
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            Ok: false,
+            message: "Error to verify participant"
+        })
+    }
+
+
+
+};
+
 module.exports = {
     validatePartipant,
-    verifyParticipant
+    verifyParticipant,
+    validatePlayer
 }

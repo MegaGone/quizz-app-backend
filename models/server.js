@@ -14,7 +14,8 @@ class Server {
       auth    :   "/auth",
       quiz    :   "/quiz",
       user    :   "/users",
-      uploads :   "/uploads"
+      uploads :   "/uploads",
+      stats   :   "/stats"
     };
 
     this.connectDB();
@@ -49,7 +50,8 @@ class Server {
       this.app.use( this.paths.auth,    require('../routes/auth'));
       this.app.use( this.paths.quiz,    require('../routes/quiz'));
       this.app.use( this.paths.user,    require('../routes/user'));
-      this.app.use( this.paths.uploads, require('../routes/uploads'))
+      this.app.use( this.paths.uploads, require('../routes/uploads'));
+      this.app.use( this.paths.stats,   require('../routes/stats'));
   }
 
   listen(){
