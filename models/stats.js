@@ -11,16 +11,31 @@ const answerSchema = Schema({
     }
 }, { _id: false });
 
+// const QuestionResponseSchema = Schema({
+//     selectedIndex: {
+//         type: Number,
+//         required: [true, "Selected index required"]
+//     },
+//     title: {
+//         type: String,
+//         required: [true, "Question title required"]
+//     },
+//     answers: [answerSchema],
+//     time: {
+//         type: Number,
+//         required: [true, "Time response's required"]
+//     }
+// }, { _id: false });
+
 const QuestionResponseSchema = Schema({
+    questionIndex: {
+        type: Number,
+        required: [true, "Question index required"]
+    },
     selectedIndex: {
         type: Number,
         required: [true, "Selected index required"]
     },
-    title: {
-        type: String,
-        required: [true, "Question title required"]
-    },
-    answers: [answerSchema],
     time: {
         type: Number,
         required: [true, "Time response's required"]

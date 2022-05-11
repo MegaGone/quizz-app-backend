@@ -7,6 +7,17 @@ const createStats = async (req = request, res = response) => {
     try {
         
         const { quizId, playerId, playerName, correctAnswers, incorrectAnswers, joinIn, questions } = req.body;
+
+        // Validate if player stats exist
+        const statsDB = await Stats.findOne({playerId});
+        
+        if (statsDB) {
+            return res.status(400).json({
+                Ok: false,
+                message: "You have been participated in this quiz"
+            })
+        }
+
         const stats = new Stats({ quizId, playerId, playerName, correctAnswers, incorrectAnswers, joinIn, questions });
 
         await stats.save();
@@ -18,6 +29,10 @@ const createStats = async (req = request, res = response) => {
 
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            Ok: false,
+            message: "Error to create stats"
+        })
     }
 
 };
