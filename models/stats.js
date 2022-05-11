@@ -1,32 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-const answerSchema = Schema({
-    title: {
-        type: String,
-        required: [true, "Title of answer required"]
-    },
-    isCorrect: {
-        type: Boolean,
-        default: false
-    }
-}, { _id: false });
-
-// const QuestionResponseSchema = Schema({
-//     selectedIndex: {
-//         type: Number,
-//         required: [true, "Selected index required"]
-//     },
-//     title: {
-//         type: String,
-//         required: [true, "Question title required"]
-//     },
-//     answers: [answerSchema],
-//     time: {
-//         type: Number,
-//         required: [true, "Time response's required"]
-//     }
-// }, { _id: false });
-
 const QuestionResponseSchema = Schema({
     questionIndex: {
         type: Number,

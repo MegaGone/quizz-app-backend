@@ -26,6 +26,14 @@ const createStats = async (req = request, res = response) => {
         const { questions: questionsDB } = await Quiz.findById({ _id: quizId });
         const { questions: answersPlayer } = stats;
 
+
+        if (questionsDB.length != answersPlayer.length) {
+            return res.status(400).json({
+                Ok: false,
+                message: "Stats dont match"
+            })
+        }
+
         const fullStats = answersPlayer.map((answer, i) => {
             return {
                 selectedIndex   : answer.selectedIndex,
