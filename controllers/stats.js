@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { Stats } = require("../models");
+const { Stats, Quiz } = require("../models");
 
 const createStats = async (req = request, res = response) => {
 
@@ -22,9 +22,22 @@ const createStats = async (req = request, res = response) => {
 
         await stats.save();
 
+        // Join the data
+        const { questions: questionsDB } = await Quiz.findById({ _id: quizId });
+        const { questions: answersPlayer } = stats;
+
+        const fullStats = answersPlayer.map((answer, i) => {
+            return {
+                selectedIndex   : answer.selectedIndex,
+                time            : answer.time,
+                title           : questionsDB[i].title,
+                answers         : questionsDB[i].answers
+            }
+        })
+
         return res.status(200).json({
             Ok: true,
-            stats
+            fullStats
         })
 
     } catch (error) {
