@@ -58,6 +58,30 @@ const createStats = async (req = request, res = response) => {
 
 };
 
+const getStatsByQuiz = async ( req = request, res = response ) => {
+
+    const { id } = req.params;
+
+    try {
+
+        const statsDB = await Stats.find({ quizId: id })
+    
+        return res.status(200).json({
+            Ok: true,
+            statsDB
+        })
+        
+    } catch (error) {
+        return res.status(400).json({
+            Ok: false,
+            message: "Error getting stats"
+        })
+    }
+
+
+}
+
 module.exports = {
-    createStats
+    createStats,
+    getStatsByQuiz
 }
