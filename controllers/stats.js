@@ -35,11 +35,13 @@ const createStats = async (req = request, res = response) => {
         }
 
         const fullStats = answersPlayer.map((answer, i) => {
-            return {
-                selectedIndex   : answer.selectedIndex,
-                time            : answer.time,
-                title           : questionsDB[i].title,
-                answers         : questionsDB[i].answers
+            if (answer.questionId == questionsDB[i]._id) {
+                return {
+                    selectedIndex   : answer.selectedIndex,
+                    time            : answer.time,
+                    title           : questionsDB[i].title,
+                    answers         : questionsDB[i].answers
+                }
             }
         })
 

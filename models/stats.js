@@ -1,8 +1,8 @@
 const { Schema, model } = require("mongoose");
 
 const QuestionResponseSchema = Schema({
-    questionIndex: {
-        type: Number,
+    questionId: {
+        type: String,
         required: [true, "Question index required"]
     },
     selectedIndex: {
