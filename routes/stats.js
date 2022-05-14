@@ -5,10 +5,11 @@ const controller = require('../controllers/stats');
 
 const { verifyQuizById } = require('../helpers');
 
-const { validateFields, validatePlayer, validateJWT, verifyQuizByUser } = require('../middlewares');
+const { validateFields, validatePlayer, validateJWT, verifyQuizByUser, verifyParticipant } = require('../middlewares');
 
 const router = Router();
 
+/*################### CREATE STAT ###################*/
 router.post('/', 
 [
     check('quizId', "Quiz Id not valid").isMongoId(),
@@ -26,13 +27,24 @@ router.post('/',
     validateFields
 ],controller.createStats)
 
+/*################### GET STATS BY QUIZ ###################*/
 router.get('/:id', 
 [
     validateJWT,
-    // check('id').custom( verifyQuizByUser ),
     check('id', 'Id not valid').isMongoId(),
+    verifyQuizByUser,
     validateFields
 ]
 ,controller.getStatsByQuiz)
+
+/*################### GET STATS BY USER ###################*/
+router.get('/:id/:user', 
+[
+    check('id', 'Quiz Id not valid').isMongoId(),
+    check('user', 'User required').not().isEmpty(),
+    verifyParticipant,
+    validateFields
+]
+, controller.getStatsByUser)
 
 module.exports = router;

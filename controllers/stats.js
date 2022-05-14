@@ -18,13 +18,13 @@ const createStats = async (req = request, res = response) => {
             })
         }
 
-        const stats = new Stats({ quizId, playerId, playerName, correctAnswers, incorrectAnswers, joinIn, questions });
+        const newStats = new Stats({ quizId, playerId, playerName, correctAnswers, incorrectAnswers, joinIn, questions });
 
-        await stats.save();
+        await newStats.save();
 
         // Join the data
         const { questions: questionsDB } = await Quiz.findById({ _id: quizId });
-        const { questions: answersPlayer } = stats;
+        const { questions: answersPlayer } = newStats;
 
 
         if (questionsDB.length != answersPlayer.length) {
@@ -34,7 +34,7 @@ const createStats = async (req = request, res = response) => {
             })
         }
 
-        const fullStats = answersPlayer.map((answer, i) => {
+        const stats = answersPlayer.map((answer, i) => {
             if (answer.questionId == questionsDB[i]._id) {
                 return {
                     selectedIndex   : answer.selectedIndex,
@@ -47,7 +47,7 @@ const createStats = async (req = request, res = response) => {
 
         return res.status(200).json({
             Ok: true,
-            fullStats
+            stats
         })
 
     } catch (error) {
@@ -81,9 +81,44 @@ const getStatsByQuiz = async ( req = request, res = response ) => {
     }
 
 
-}
+};
+
+const getStatsByUser = async ( req = request, res = response ) => {
+
+    const { id, user } = req.params;
+
+    
+    try {
+        const { questions } = await Quiz.findById({ _id: id });
+        const { questions: answers } = await Stats.findOne({ playerId: user });
+
+        const stats = answers.map((answer, i) => {
+            if ( answer.questionId == questions[i]._id) {
+                return {
+                    selectedIndex   : answer.selectedIndex,
+                    time            : answer.time,
+                    title           : questions[i].title,
+                    answers         : questions[i].answers
+                }
+            }
+        })
+        
+        return res.status(200).json({
+            Ok: false,
+            stats
+        })
+
+    } catch (error) {
+        return res.status(400).json({
+            Ok: false,
+            message: "Error getting stats"
+        });
+    }
+
+};
 
 module.exports = {
     createStats,
-    getStatsByQuiz
+    getStatsByQuiz,
+    getStatsByUser
 }

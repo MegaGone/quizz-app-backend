@@ -45,7 +45,10 @@ const verifyParticipant = async ( req = request, res = response, next ) => {
         const quizDB = await Quiz.findById(id);
 
         if(!quizDB) {
-            return res.status(400).send("ERROR: Quiz doesn't exist")
+            return res.status(400).json({
+                Ok: false,
+                message: "Quiz doesn't exist"
+            })
         }
 
         const { participants } = quizDB;
@@ -55,13 +58,19 @@ const verifyParticipant = async ( req = request, res = response, next ) => {
         if(existParticipant >= 0) {
             next();
         } else {
-            return res.status(400).send('ERROR: User are not participant of this quiz')
+            return res.status(400).json({
+                Ok: false,
+                message: "User are not participant of this quiz"
+            })
         }
         
 
     } catch (error) {
         console.log(error);
-        return res.status(500).send('ERROR: To verify participant')
+        return res.status(500).json({
+            Ok: false,
+            message: "Error to verify participant"
+        })
     }
 
 }
