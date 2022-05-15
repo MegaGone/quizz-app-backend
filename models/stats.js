@@ -17,8 +17,9 @@ const QuestionResponseSchema = Schema({
 
 const UserStatsSchema = Schema({
     quizId: {
-        type: String,
-        required: [true, "QuizID required"]
+        type: Schema.Types.ObjectId,
+        ref: "Quiz",
+        required: true
     },
     playerId: {
         type: String,
