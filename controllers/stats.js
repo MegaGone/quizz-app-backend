@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { Stats, Quiz } = require("../models");
+const { Stats, Quiz, User } = require("../models");
 
 const createStats = async (req = request, res = response) => {
 
@@ -45,20 +45,31 @@ const createStats = async (req = request, res = response) => {
             }
         })
 
-        const userStats = {
-            quizId,
-            title: quizDB.title,
-            joinIn,
-            correctAnswers,
-            incorrectAnswers,
-            questions,
-            description: quizDB.description,
-            lapse: quizDB.lapse
+        // Push into quizzesPlayeds[]
+        const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
+
+        if (checkForHexRegExp.test(playerId)) {
+
+            const userStats = {
+                quizId,
+                title: quizDB.title,
+                joinIn,
+                correctAnswers,
+                incorrectAnswers,
+                answers: answersPlayer,
+                description: quizDB.description,
+                lapse: quizDB.lapse
+            }
+
+            await User.updateOne(
+                { _id: playerId },
+                { $push: { quizzesPlayeds: userStats } }
+            )
         }
 
         return res.status(200).json({
             Ok: true,
-            userStats
+            stats
         })
 
     } catch (error) {

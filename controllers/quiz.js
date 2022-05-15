@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const { nanoid } = require('nanoid')
 const moment = require('moment');
 
-const { Quiz, Stats } = require('../models')
+const { Quiz, Stats, User } = require('../models')
 
 const getQuizs = async (req = request, res = response) => {
 
@@ -95,6 +95,10 @@ const removeParticipant = async ( req = request, res = response ) => {
     );
 
     await Stats.findOneAndRemove({ playerId: user });
+    await User.updateMany(
+      { _id: user },
+      { $pull: { quizzesPlayeds: { quizId: id } }}
+    );
 
     return res.status(200).json({
       Ok: true,
