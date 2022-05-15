@@ -23,9 +23,9 @@ const createStats = async (req = request, res = response) => {
         await newStats.save();
 
         // Join the data
-        const { questions: questionsDB } = await Quiz.findById({ _id: quizId });
+        const quizDB = await Quiz.findById({ _id: quizId });
+        const { questions: questionsDB } = quizDB;
         const { questions: answersPlayer } = newStats;
-
 
         if (questionsDB.length != answersPlayer.length) {
             return res.status(400).json({
@@ -45,9 +45,20 @@ const createStats = async (req = request, res = response) => {
             }
         })
 
+        const userStats = {
+            quizId,
+            title: quizDB.title,
+            joinIn,
+            correctAnswers,
+            incorrectAnswers,
+            questions,
+            description: quizDB.description,
+            lapse: quizDB.lapse
+        }
+
         return res.status(200).json({
             Ok: true,
-            stats
+            userStats
         })
 
     } catch (error) {
