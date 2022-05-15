@@ -69,10 +69,14 @@ const createStats = async (req = request, res = response) => {
             const { quizzesPlayeds } = await User.findById({ _id: playerId });
 
             if (quizzesPlayeds.length > 3) {
+                const statsToRemove = quizzesPlayeds[0];
+
                 await User.updateOne(
                     { _id: playerId },
                     { $pop: { quizzesPlayeds: -1 }}
                 );
+
+                await Stats.findOneAndRemove({ quizId: statsToRemove.quizId, playerId: playerId })
             }
         }
 
