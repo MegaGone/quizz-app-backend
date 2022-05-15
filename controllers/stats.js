@@ -9,7 +9,7 @@ const createStats = async (req = request, res = response) => {
         const { quizId, playerId, playerName, correctAnswers, incorrectAnswers, joinIn, questions } = req.body;
 
         // Validate if player stats exist
-        const statsDB = await Stats.findOne({playerId});
+        const statsDB = await Stats.findOne({playerId, quizId});
         
         if (statsDB) {
             return res.status(400).json({
@@ -64,7 +64,16 @@ const createStats = async (req = request, res = response) => {
             await User.updateOne(
                 { _id: playerId },
                 { $push: { quizzesPlayeds: userStats } }
-            )
+            );
+
+            const { quizzesPlayeds } = await User.findById({ _id: playerId });
+
+            if (quizzesPlayeds.length > 3) {
+                await User.updateOne(
+                    { _id: playerId },
+                    { $pop: { quizzesPlayeds: -1 }}
+                );
+            }
         }
 
         return res.status(200).json({
