@@ -95,10 +95,16 @@ const removeParticipant = async ( req = request, res = response ) => {
     );
 
     await Stats.findOneAndRemove({ playerId: user });
-    await User.updateMany(
-      { _id: user },
-      { $pull: { quizzesPlayeds: { quizId: id } }}
-    );
+
+    // If user have been register, delete from their stats
+    const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
+    if (checkForHexRegExp.test(user)) {
+      await User.updateMany(
+        { _id: user },
+        { $pull: { quizzesPlayeds: { quizId: id } }}
+      );
+    }
+
 
     return res.status(200).json({
       Ok: true,
