@@ -47,4 +47,13 @@ router.get('/:id/:user',
 ]
 , controller.getStatsByUser)
 
+
+router.get('/player/:id/:user', [
+    check('id', 'Quiz Id not valid').isMongoId(),
+    check('user', 'User required').not().isEmpty(),
+    verifyParticipant,
+    validateFields
+]
+,controller.getUserStats)
+
 module.exports = router;
