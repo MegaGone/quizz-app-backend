@@ -1,5 +1,6 @@
 const { request, response } = require("express");
-const { Quiz } = require('../models')
+const { Quiz } = require('../models');
+const jwt = require("jsonwebtoken");
 
 const validatePartipant = async (req = request, res = response, next ) => {
 
@@ -108,9 +109,6 @@ const validatePlayer = async ( req = request, res = response, next ) => {
             message: "Error to verify participant"
         })
     }
-
-
-
 };
 
 module.exports = {

@@ -1,5 +1,7 @@
 const { request, response } = require("express");
 const { Stats, Quiz, User } = require("../models");
+const { generateJWTGuest } = require('../helpers');
+const jwt = require("jsonwebtoken");
 
 const createStats = async (req = request, res = response) => {
 
@@ -81,22 +83,11 @@ const createStats = async (req = request, res = response) => {
             }
         }
 
-        const playerStats = {
-            quizId,
-            title: quizDB.title,
-            correctAnswers,
-            incorrectAnswers,
-            answers: stats,
-            lapse: quizDB.lapse,
-            description: quizDB.description,
-            playerId,
-            playerName,
-            joinIn
-        }
+        const token = await generateJWTGuest(playerId, quizId);
 
         return res.status(200).json({
             Ok: true,
-            playerStats
+            token
         })
 
     } catch (error) {
@@ -166,27 +157,16 @@ const getStatsByUser = async ( req = request, res = response ) => {
 
 };
 
-const getUserStats = async (req = request, res = response) => {
-      
-    const { id, user } = req.params;
 
+const getUserStats2 = async(req = request, res = response) => {
+
+    const token = req.header("y-token");
+    
     try {
+        const { uid: user, quizId: id } = jwt.verify(token, process.env.SECRETKEY);
+
         const quizDB  = await Quiz.findById({ _id: id });
         const statsDB = await Stats.findOne({ quizId: id, playerId: user });
-    
-        if (!quizDB) {
-            return res.status(400).json({
-                Ok: false,
-                message: 'Quiz not find'
-            })
-        }
-    
-        if (!statsDB) {
-            return res.status(400).json({
-                Ok: false,
-                message: 'Stats not find'
-            })
-        }
     
         const { title, lapse, description, joinIn, questions: questionsDB } = quizDB;
         const { questions: answersPlayer, playerName, playerId, quizId, incorrectAnswers, correctAnswers } = statsDB;
@@ -233,5 +213,5 @@ module.exports = {
     createStats,
     getStatsByQuiz,
     getStatsByUser,
-    getUserStats
+    getUserStats2
 }

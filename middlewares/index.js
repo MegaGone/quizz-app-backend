@@ -1,6 +1,6 @@
 const { validateFields                          } = require('./validate-fields');
 const { haveRoles                               } = require('./validate-roles');
-const { validateJWT, validateJwtToRenewToken    } = require('./validate-jwt');
+const { validateJWT, validateJwtToRenewToken, validateJWTGuest  } = require('./validate-jwt');
 const { validatePartipant, verifyParticipant, validatePlayer    } = require('./validate-participant'); 
 const { verifyQuizByUser, verifyQuizByCode      } = require('./verifyQuizByUser');
 const { validateCurrentPassword                 } = require('./validate-password');
@@ -22,5 +22,6 @@ module.exports = {
     validateCurrentPassword,
     validateFiles,
     verifyEmail,
-    validatePlayer
+    validatePlayer,
+    validateJWTGuest
 }
