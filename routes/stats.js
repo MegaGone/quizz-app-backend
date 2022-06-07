@@ -27,6 +27,14 @@ router.post('/',
     validateFields
 ],controller.createStats)
 
+/*################### GET STATS GUEST PLAYER ###################*/
+router.get('/guest', 
+[
+    validateJWTGuest,
+    validateFields
+]
+,controller.getUserStats)
+
 /*################### GET STATS BY QUIZ ###################*/
 router.get('/:id', 
 [
@@ -46,12 +54,5 @@ router.get('/:id/:user',
     validateFields
 ]
 , controller.getStatsByUser)
-
-router.get('/', 
-[
-    validateJWTGuest,
-    validateFields
-]
-,controller.getUserStats)
 
 module.exports = router;
