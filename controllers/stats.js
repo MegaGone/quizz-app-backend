@@ -158,7 +158,7 @@ const getStatsByUser = async ( req = request, res = response ) => {
 };
 
 
-const getUserStats2 = async(req = request, res = response) => {
+const getUserStats = async(req = request, res = response) => {
 
     const token = req.header("y-token");
     
@@ -213,5 +213,5 @@ module.exports = {
     createStats,
     getStatsByQuiz,
     getStatsByUser,
-    getUserStats2
+    getUserStats
 }

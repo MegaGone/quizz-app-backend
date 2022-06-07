@@ -5,7 +5,7 @@ const controller = require('../controllers/stats');
 
 const { verifyQuizById } = require('../helpers');
 
-const { validateFields, validatePlayer, validateJWT, verifyQuizByUser, verifyParticipant } = require('../middlewares');
+const { validateFields, validatePlayer, validateJWT, verifyQuizByUser, verifyParticipant, validateJWTGuest } = require('../middlewares');
 
 const router = Router();
 
@@ -49,8 +49,9 @@ router.get('/:id/:user',
 
 router.get('/', 
 [
+    validateJWTGuest,
     validateFields
 ]
-,controller.getUserStats2)
+,controller.getUserStats)
 
 module.exports = router;
