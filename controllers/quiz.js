@@ -202,7 +202,7 @@ const getQuizBycode = async (req = request, res = response) => {
   const query = { code: code };
   
   try {
-    const quizDB = await Quiz.find(query);
+    const quizDB = await Quiz.findOne(query);
 
     return res.status(200).json({
       status: "OK",
