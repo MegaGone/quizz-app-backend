@@ -2,12 +2,12 @@ const { request, response } = require("express");
 const { Quiz } = require('../models');
 const jwt = require("jsonwebtoken");
 
-const validatePartipant = async (req = request, res = response, next ) => {
+const validateParticipant = async (req = request, res = response, next ) => {
 
     const { code } = req.body;
     const { _id: id } = req.user;
 
-    const quiz = await Quiz.find({code}); 
+    const quiz = await Quiz.findOne({code}); 
 
     if(!quiz){
         return res.status(400).json({
@@ -17,7 +17,7 @@ const validatePartipant = async (req = request, res = response, next ) => {
     }
 
     try {
-        const participants = quiz[0].participants;
+        const { participants } = quiz;
 
         const ids = participants.map(participant => participant.userId);
 
@@ -112,7 +112,7 @@ const validatePlayer = async ( req = request, res = response, next ) => {
 };
 
 module.exports = {
-    validatePartipant,
+    validateParticipant,
     verifyParticipant,
     validatePlayer
 }
