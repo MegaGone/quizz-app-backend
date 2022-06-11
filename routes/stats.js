@@ -9,8 +9,10 @@ const { validateFields, validatePlayer, validateJWT, verifyQuizByUser, verifyPar
 
 const router = Router();
 
-/*################### CREATE STAT ###################*/
-router.post('/', 
+/*################### CREATE STAT GUEST ###################*/
+
+/*################### CREATE STAT GUEST ###################*/
+router.post('/guest', 
 [
     check('quizId', "Quiz Id not valid").isMongoId(),
     check('quizId').custom(verifyQuizById),
@@ -25,7 +27,7 @@ router.post('/',
     check('questions.*.selectedIndex' , 'Answer selected required').not().isEmpty(),
     check('questions.*.time' ,  'Response time required').not().isEmpty(),
     validateFields
-],controller.createStats)
+],controller.createStatsGuest)
 
 /*################### GET STATS GUEST PLAYER ###################*/
 router.get('/guest', 

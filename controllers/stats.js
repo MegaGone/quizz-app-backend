@@ -5,6 +5,10 @@ const jwt = require("jsonwebtoken");
 
 const createStats = async (req = request, res = response) => {
 
+}
+
+const createStatsGuest = async (req = request, res = response) => {
+
     
     try {
         
@@ -210,8 +214,9 @@ const getUserStats = async(req = request, res = response) => {
 }
 
 module.exports = {
-    createStats,
+    createStatsGuest,
     getStatsByQuiz,
     getStatsByUser,
-    getUserStats
+    getUserStats,
+    createStats
 }
