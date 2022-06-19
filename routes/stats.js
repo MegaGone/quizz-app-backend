@@ -47,10 +47,19 @@ router.get('/guest',
         validateJWTGuest,
         validateFields
     ]
-    , controller.getUserStats)
+    , controller.getUserStatsGuest)
+
+/*################### GET STATS PLAYER ###################*/
+router.get('/:id/:user', [
+    validateJWT,
+    check('id', 'QuizID not valid').isMongoId(),
+    check('user', 'QuizID not valid').isMongoId(),
+    validateFields
+], controller.getUserStats);
+
 
 /*################### GET STATS BY QUIZ ###################*/
-router.get('/:id',
+router.get('/quiz/:id',
     [
         validateJWT,
         check('id', 'Id not valid').isMongoId(),
