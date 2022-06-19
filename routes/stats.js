@@ -53,7 +53,7 @@ router.get('/guest',
 router.get('/:id/:user', [
     validateJWT,
     check('id', 'QuizID not valid').isMongoId(),
-    check('user', 'QuizID not valid').isMongoId(),
+    check('user', 'QuizID not valid').not().isEmpty(),
     validateFields
 ], controller.getUserStats);
 
