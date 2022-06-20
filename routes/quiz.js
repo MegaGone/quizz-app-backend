@@ -67,6 +67,16 @@ router.delete('/remove/:id/:user',
 ]
 ,controller.removeParticipant)
 
+router.delete('/remove/guest/:id/:user',
+[
+  check('id', 'QuizId required').not().isEmpty(), 
+  check('id', 'Invalid quizId').isMongoId(),
+  check('id').custom(verifyQuizById),
+  check('user', 'userId required').not().isEmpty(),
+  verifyParticipant,
+  validateFields
+], controller.removeParticipantGuest)
+
 // Get Quizzes By User
 router.get('/quizzes', validateJwtToRenewToken, controller.getQuizzesByUser)
 

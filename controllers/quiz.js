@@ -305,6 +305,33 @@ const joinToQuizGuest = async ( req = request, res = response) => {
 
 }
 
+const removeParticipantGuest = async ( req = request, res = response ) => {
+
+  const { id, user } = req.params;
+
+  try {
+    
+    await Quiz.updateMany(
+      { _id: id },
+      { $pull: { participants: { userId: user }}}
+    );
+
+    return res.status(200).json({
+      Ok: true,
+      message: 'Participant removed'
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error removing participant'
+    })
+  }
+
+
+}
+
 /*################### QUESTIONS ###################*/
 const addQuestion = async (req = request, res = response ) => {
 
@@ -396,5 +423,6 @@ module.exports = {
   updateQuestion,
   removeParticipant,
   getQuizByCodeGuest,
-  joinToQuizGuest
+  joinToQuizGuest,
+  removeParticipantGuest
 };
