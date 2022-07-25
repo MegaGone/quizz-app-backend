@@ -130,7 +130,7 @@ const showImageCloudinary = async (req = request, res = response) => {
     // Default image
     const noImagePath = "https://res.cloudinary.com/dntsavc6r/image/upload/v1650422395/ngQuiz/noprofile_oqt2bu.jpg";
 
-    return res.status(200).sendFile(noImagePath);
+    return res.status(200).send(noImagePath);
 }
 
 module.exports = {
