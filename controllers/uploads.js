@@ -124,11 +124,11 @@ const showImageCloudinary = async (req = request, res = response) => {
     }
 
     if (model.img) {
-        return res.status(200).send(model.img);
+        return res.status(200).send(model.img)
     }
 
     // Default image
-    const noImagePath = path.join(__dirname, '../assets/noprofile.jpg')
+    const noImagePath = "https://res.cloudinary.com/dntsavc6r/image/upload/v1650422395/ngQuiz/noprofile_oqt2bu.jpg";
 
     return res.status(200).sendFile(noImagePath);
 }

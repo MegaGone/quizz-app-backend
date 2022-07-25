@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const bcrypt = require('bcryptjs');
 
 const { User } = require('../models');
-const { generateJWT } = require("../helpers");
+const { generateJWT, uploadFile } = require("../helpers");
 
 const getUsers = async (req = request, res = response) => {
   
@@ -34,13 +34,8 @@ const createUser = async (req = request, res = response) => {
   user.img = "https://res.cloudinary.com/dntsavc6r/image/upload/v1650422395/ngQuiz/noprofile_oqt2bu.jpg";
 
   await user.save();
-
-  const token = await generateJWT( user.id );
-
-  return res.status(201).json({
-    msg: 'User created succesfully',
-    token
-  })
+  
+  return res.status(201).send('Ok')
 
 };
 
@@ -118,11 +113,38 @@ const purgeDeleteUsers = async(req = request, res = response ) => {
   })
 }
 
+const updateUserv2 = async ( req = request, res = response ) => {
+
+  const { name } = req.body;
+  const { id } = req.params;
+  const file = req.files?.file;
+
+  const userDB = await User.findById(id);
+  userDB.name = name;
+
+  // file != undefined || file != null || 
+  if (file) {
+    try {
+      let imageUploaded = await uploadFile(file, ['png', 'jpg', 'jpeg', 'gif'], id);
+      userDB.img = imageUploaded;
+    } catch (error) {
+      return res.status(400).send(error);
+    }
+  }
+
+  await userDB.save();
+
+  return res.status(200).json(userDB)
+  
+
+}
+
 module.exports = {
   getUsers,
   createUser,
   getUser,
   updateUser,
   deleteUser,
-  purgeDeleteUsers
+  purgeDeleteUsers,
+  updateUserv2
 };

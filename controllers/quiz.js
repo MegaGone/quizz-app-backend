@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const { nanoid } = require('nanoid')
 const moment = require('moment');
 
-const { Quiz } = require('../models')
+const { Quiz, Stats, User } = require('../models')
 
 const getQuizs = async (req = request, res = response) => {
 
@@ -45,8 +45,10 @@ const createQuiz = async (req = request, res = response) => {
 };
 
 const joinToQuiz = async ( req = request, res = response ) => {
-  
-  // Get the code to join to the quiz
+
+  try {
+
+      // Get the code to join to the quiz
   const { code } = req.body;
 
   // Get the user data to the object Participant
@@ -60,19 +62,24 @@ const joinToQuiz = async ( req = request, res = response ) => {
     joinIn
   }
 
-  try {
-
     const quizDB = await Quiz.updateOne(
       { code, 'participants.userId': { $nin: [participant.id] } },
       { $push: { participants: participant } },
       { upsert: false}
     );
 
-    return res.status(400).send('Joined to the quiz')
+    return res.status(200).json({
+      Ok: true,
+      message: 'Joined',
+      player: participant
+    })
 
   } catch (error) {
     console.log(error);
-    return res.status(500).send('ERROR: We have a error to join the quiz')
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error to join to the quiz'
+    })
   }
 
 }
@@ -86,12 +93,30 @@ const removeParticipant = async ( req = request, res = response ) => {
     const quizDB = await Quiz.updateMany(
       { _id: id },
       { $pull: { participants: { userId: user }}}
-    )
+    );
 
-    return res.status(200).send('Participant removed')
+    await Stats.findOneAndRemove({ playerId: user });
+
+    // If user have been register, delete from their stats
+    const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
+    if (checkForHexRegExp.test(user)) {
+      await User.updateMany(
+        { _id: user },
+        { $pull: { quizzesPlayeds: { quizId: id } }}
+      );
+    }
+
+
+    return res.status(200).json({
+      Ok: true,
+      message: 'Participant removed'
+    })
   } catch (error) {
     console.log(error);
-    return res.status(500).send("ERROR: Removing participant")
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error removing participant'
+    })
   }
 
 
@@ -177,7 +202,7 @@ const getQuizBycode = async (req = request, res = response) => {
   const query = { code: code };
   
   try {
-    const quizDB = await Quiz.find(query);
+    const quizDB = await Quiz.findOne(query);
 
     return res.status(200).json({
       status: "OK",
@@ -191,7 +216,123 @@ const getQuizBycode = async (req = request, res = response) => {
   }
 }
 
-/***** QUESTIONS *****/
+/*################### GUEST ###################*/
+const getQuizByCodeGuest = async ( req = request, res = response ) => {
+
+  const { code } = req.body;
+
+  if (code.length < 7 ) {
+    return res.status(400).json({
+      Ok: false,
+      message: 'Invalid code.'
+    })
+  }
+
+  const quizDB = await Quiz.findOne({code});
+
+  if (!quizDB) {
+    return res.status(400).json({
+      Ok: false,
+      message: 'Quiz not find.'
+    })
+  }
+
+  return res.status(200).json({
+    Ok: true,
+    message: "Exist",
+    code
+  })
+
+};
+
+const joinToQuizGuest = async ( req = request, res = response) => {
+
+  const { code, name, email } = req.body;
+
+  try {
+
+    const quizDB = await Quiz.findOne({ code });
+  
+    // If quiz doesn't exist
+    if (!quizDB) {
+      return res.status(400).json({
+        Ok: false,
+        message: 'Quiz not find.'
+      })
+    }
+    
+    // If the participant exist
+    const { participants } = quizDB;
+
+    const ids = participants.map(p => p.userId);
+
+    if ( ids.includes(email) ) {
+      return res.status(400).json({
+        Ok: false,
+        message: 'You have already participate in the quiz'
+      })
+    }
+
+
+    const joinIn = moment().format("YYYY-MM-DD")
+  
+    const participant = {
+      name,
+      userId: email,
+      joinIn
+    }
+
+    const quizToInsert = await Quiz.updateOne(
+      { code, 'participants.userId': { $nin: [participant.id] } },
+      { $push: { participants: participant } },
+      { upsert: false}
+    );
+
+    return res.status(200).json({
+      Ok: true,
+      message: 'Joined',
+      quizDB,
+      player: participant
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error to join to the quiz'
+    })
+  }
+
+}
+
+const removeParticipantGuest = async ( req = request, res = response ) => {
+
+  const { id, user } = req.params;
+
+  try {
+    
+    await Quiz.updateMany(
+      { _id: id },
+      { $pull: { participants: { userId: user }}}
+    );
+
+    return res.status(200).json({
+      Ok: true,
+      message: 'Participant removed'
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error removing participant'
+    })
+  }
+
+
+}
+
+/*################### QUESTIONS ###################*/
 const addQuestion = async (req = request, res = response ) => {
 
   const { id } = req.params;
@@ -280,5 +421,8 @@ module.exports = {
   deleteQuestion,
   addQuestion,
   updateQuestion,
-  removeParticipant
+  removeParticipant,
+  getQuizByCodeGuest,
+  joinToQuizGuest,
+  removeParticipantGuest
 };

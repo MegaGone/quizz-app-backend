@@ -4,30 +4,37 @@ const { check } = require('express-validator');
 const Controller = require('../controllers/user');
 
 // Helpers
-const { validateEmail, verifyUserById, validateRole, validateSpaces } = require('../helpers');
+const { verifyUserById, validateRole, validateSpaces } = require('../helpers');
 
 // Middlwares
-const { validateFields, haveRoles, validateJWT } = require('../middlewares');
+const { validateFields, haveRoles, validateJWT, verifyEmail } = require('../middlewares');
 
 const router = Router();
 
-router.get('/', Controller.getUsers);
+router.get('/', 
+[
+    validateJWT,
+    haveRoles('ADMIN_ROLE'),
+    validateFields
+]
+,Controller.getUsers);
 
 router.post('/', 
 [
     check('name', 'Name is required').not().isEmpty(),
     check('name').custom( validateSpaces ),
     check('email', 'Invalid email').isEmail(),
-    check('email').custom( validateEmail ),
     check('password', 'Password must at least 6 characters').isLength({min: 6}),
     check('password').custom( validateSpaces ),
     check('role').custom( validateRole ),
+    verifyEmail,
     validateFields
 ]
 ,Controller.createUser)
 
 router.get('/:id', 
 [
+    validateJWT,
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom( verifyUserById ),
     validateFields
@@ -36,11 +43,12 @@ router.get('/:id',
 
 router.put('/:id', 
 [
+    validateJWT,
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(verifyUserById),
     validateFields
 ]
-,Controller.updateUser)
+,Controller.updateUserv2)
 
 router.delete('/:id', 
 [
