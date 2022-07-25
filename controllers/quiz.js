@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const { nanoid } = require('nanoid')
 const moment = require('moment');
 
-const { Quiz } = require('../models')
+const { Quiz, Stats, User } = require('../models')
 
 const getQuizs = async (req = request, res = response) => {
 
@@ -70,7 +70,8 @@ const joinToQuiz = async ( req = request, res = response ) => {
 
     return res.status(200).json({
       Ok: true,
-      message: 'Joined'
+      message: 'Joined',
+      player: participant
     })
 
   } catch (error) {
@@ -92,7 +93,19 @@ const removeParticipant = async ( req = request, res = response ) => {
     const quizDB = await Quiz.updateMany(
       { _id: id },
       { $pull: { participants: { userId: user }}}
-    )
+    );
+
+    await Stats.findOneAndRemove({ playerId: user });
+
+    // If user have been register, delete from their stats
+    const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
+    if (checkForHexRegExp.test(user)) {
+      await User.updateMany(
+        { _id: user },
+        { $pull: { quizzesPlayeds: { quizId: id } }}
+      );
+    }
+
 
     return res.status(200).json({
       Ok: true,
@@ -189,7 +202,7 @@ const getQuizBycode = async (req = request, res = response) => {
   const query = { code: code };
   
   try {
-    const quizDB = await Quiz.find(query);
+    const quizDB = await Quiz.findOne(query);
 
     return res.status(200).json({
       status: "OK",
@@ -292,6 +305,33 @@ const joinToQuizGuest = async ( req = request, res = response) => {
 
 }
 
+const removeParticipantGuest = async ( req = request, res = response ) => {
+
+  const { id, user } = req.params;
+
+  try {
+    
+    await Quiz.updateMany(
+      { _id: id },
+      { $pull: { participants: { userId: user }}}
+    );
+
+    return res.status(200).json({
+      Ok: true,
+      message: 'Participant removed'
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      Ok: false,
+      message: 'Error removing participant'
+    })
+  }
+
+
+}
+
 /*################### QUESTIONS ###################*/
 const addQuestion = async (req = request, res = response ) => {
 
@@ -383,5 +423,6 @@ module.exports = {
   updateQuestion,
   removeParticipant,
   getQuizByCodeGuest,
-  joinToQuizGuest
+  joinToQuizGuest,
+  removeParticipantGuest
 };

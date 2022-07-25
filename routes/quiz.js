@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { validateRole, verifyUserById, validateSpaces, verifyQuizById, verifyCodeToQuiz } = require('../helpers')
 
 // Middlewares
-const { validateFields, validateJWT, haveRoles, validatePartipant, validateJwtToRenewToken, verifyParticipant, verifyQuizByUser, verifyQuizByCode } = require('../middlewares')
+const { validateFields, validateJWT, haveRoles, validateParticipant, validateJwtToRenewToken, verifyParticipant, verifyQuizByUser, verifyQuizByCode } = require('../middlewares')
 
 // Controller
 const controller = require('../controllers/quiz');
@@ -47,7 +47,7 @@ router.post('/join',
   check('code', 'Code required').not().isEmpty(),
   check('code', 'The code must be at least 7 chars').isLength({ min: 7 }),
   check('code').custom( verifyCodeToQuiz ),
-  validatePartipant,
+  validateParticipant,
   validateFields
 ]
 ,controller.joinToQuiz)
@@ -66,6 +66,16 @@ router.delete('/remove/:id/:user',
   validateFields
 ]
 ,controller.removeParticipant)
+
+router.delete('/remove/guest/:id/:user',
+[
+  check('id', 'QuizId required').not().isEmpty(), 
+  check('id', 'Invalid quizId').isMongoId(),
+  check('id').custom(verifyQuizById),
+  check('user', 'userId required').not().isEmpty(),
+  verifyParticipant,
+  validateFields
+], controller.removeParticipantGuest)
 
 // Get Quizzes By User
 router.get('/quizzes', validateJwtToRenewToken, controller.getQuizzesByUser)
