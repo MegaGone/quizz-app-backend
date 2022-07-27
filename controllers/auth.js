@@ -13,18 +13,18 @@ const login = async (req = request, res = response) => {
 
     const user = await User.findOne({ email });
 
-    if(!user){
-        return res.status(400).send('ERROR: USER / PASSWORD are wrong');
+    if (!user) {
+      return res.status(400).send('ERROR: USER / PASSWORD are wrong');
     }
 
-    if( !user.enabled ) {
-        return res.status(400).send('ERROR: USER Dont exist');
+    if (!user.enabled) {
+      return res.status(400).send('ERROR: USER Dont exist');
     }
 
     const validPassword = bcrypt.compareSync(password, user.password)
 
-    if(!validPassword){
-        return res.status(400).send('ERROR: USER / PASSWORD are wrong');
+    if (!validPassword) {
+      return res.status(400).send('ERROR: USER / PASSWORD are wrong');
     }
 
     const token = await generateJWT(user.id);
@@ -39,20 +39,19 @@ const login = async (req = request, res = response) => {
   }
 };
 
-const googleSignIn = async (req = request, res = response ) => {
+const googleSignIn = async (req = request, res = response) => {
 
   const googleToken = req.body.token;
 
   try {
+    const { name, email, picture } = await googleVerify(googleToken);
 
-    const { name, email, picture } = await googleVerify(googleToken)
-
-    const UserDB = await User.findOne({email})
+    const UserDB = await User.findOne({ email })
     let user;
 
     if (!UserDB) {
       user = new User({
-        name, 
+        name,
         email,
         password: '@@@',
         img: picture,
@@ -65,7 +64,7 @@ const googleSignIn = async (req = request, res = response ) => {
     }
 
     await user.save();
-    
+
     const token = await generateJWT(user.id);
 
     return res.status(200).json({
@@ -79,13 +78,13 @@ const googleSignIn = async (req = request, res = response ) => {
   }
 }
 
-const renewToken = async(req = request, res = response) => {
-  
+const renewToken = async (req = request, res = response) => {
+
   const uid = req.uid;
 
-  const token = await generateJWT( uid );
+  const token = await generateJWT(uid);
 
-  return res.status(200).json({token})
+  return res.status(200).json({ token })
 
 }
 
@@ -94,12 +93,12 @@ const getSession = async (req = request, res = response) => {
   const token = req.header('x-token');
 
   try {
-    
+
     const { uid } = await jwt.verify(token, process.env.SECRETKEY);
 
-    const UserDB = await User.findById({_id: uid})
+    const UserDB = await User.findById({ _id: uid })
 
-    if(!UserDB) {
+    if (!UserDB) {
       return res.status(404).send('ERROR: To get session')
     }
 
@@ -108,24 +107,24 @@ const getSession = async (req = request, res = response) => {
   } catch (error) {
     return res.status(400).send('ERROR: To verify session')
   }
-  
+
 }
 
 const changePassword = async (req = request, res = response) => {
 
   const currentPassword = req.currentPass;
-  const newPassword     = req.newPass;
-  const { _id: uid }    = req.user;
+  const newPassword = req.newPass;
+  const { _id: uid } = req.user;
 
-  if(currentPassword == newPassword) {
+  if (currentPassword == newPassword) {
     return res.status(400).send('ERROR: The new password must not be the same as the current password.')
   }
 
   try {
-    
+
     let userDB = await User.findById(uid);
 
-    if(!userDB) {
+    if (!userDB) {
       return res.status(400).send('ERROR: To find user to update password.')
     }
 

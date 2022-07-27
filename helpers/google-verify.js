@@ -1,5 +1,5 @@
 const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_ID);
+const client = new OAuth2Client(process.env.GOOGLE_SECRET);
 
 
 const googleVerify = async ( token = "" ) => {
@@ -8,14 +8,9 @@ const googleVerify = async ( token = "" ) => {
     audience: process.env.GOOGLE_ID
   });
   const payload = ticket.getPayload();
-  const userid = payload["sub"];
+  console.log({payload});
 
-  console.log(payload);
-
-  const { name, email, picture } = payload;
-
-  return { name, email, picture };
-
+  return payload;
 }
 
 module.exports = {
