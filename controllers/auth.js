@@ -44,6 +44,11 @@ const googleSignIn = async (req = request, res = response) => {
   const googleToken = req.body.token;
 
   try {
+
+    if(!googleToken || googleToken === undefined) {
+      return res.status(500).send('Error to get google token')
+    }
+
     const { name, email, picture } = await googleVerify(googleToken);
 
     const UserDB = await User.findOne({ email })
@@ -73,7 +78,6 @@ const googleSignIn = async (req = request, res = response) => {
     })
 
   } catch (error) {
-    console.log(error);
     return res.status(500).send('Error to get google token')
   }
 }
